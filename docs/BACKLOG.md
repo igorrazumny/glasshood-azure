@@ -29,3 +29,13 @@
 4. Collapse to a single sanitized commit (fresh history) → delete old repo → recreate same name → push the one commit.
 5. cypher re-clones the new repo (old clone orphaned — history replaced). Coordinate timing (no mid-push).
 6. THEN flip public. (Force-push alone is NOT enough — GitHub retains dangling commits by SHA; delete+recreate guarantees zero residual.)
+
+## REQ-GHA-004: Guest entry = honest read-only view of the LIVE system (not "demo")
+- **Goal:** Reframe the unauthenticated guest entry from "demo" to an honest read-only view of the *real, live* system. It IS live — guests just get read-only access, not full access.
+  - Entry button: **"View live (read-only)"** — remove all "demo" wording.
+  - Persistent in-app badge: **"Read-only · live system"** so guests understand it's the real system in a viewing capacity, not a mockup.
+  - **Key requirement (makes the "live" label honest):** the guest entry must show the **live topology, read-only** — today it serves a static fixture, so point it at live data (read-only role / public read-only topology). Read-only must be enforced (no actions, no privileged drill-downs).
+  - Route `/guest` or `/view` if low-cost; otherwise keep the path and fix visible text only.
+- **Deferred sub-item (backlog — Igor OK to defer):** genericize the guest-view display labels (component / model / region identifiers) so the read-only view conveys the architecture without specific internal identifiers.
+- **Owners:** neo (app — relabel, badge, live read-only routing, label genericization). cypher (portal — "Launch demo" button text → match, one line).
+- **Status:** tracked.
