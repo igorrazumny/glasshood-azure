@@ -124,7 +124,7 @@ function ThemeToggle() {
   )
 }
 
-export default function StatusHeader({ topology, lastUpdated, onRefresh, onLogout, isDemo, onVerify }) {
+export default function StatusHeader({ topology, lastUpdated, onRefresh, onLogout, isDemo, readOnly, onVerify }) {
   const [ago, setAgo] = useState(0)
   const [refreshing, setRefreshing] = useState(false)
   const [version, setVersion] = useState('')
@@ -161,7 +161,8 @@ export default function StatusHeader({ topology, lastUpdated, onRefresh, onLogou
       <div className="flex items-center gap-2 sm:gap-3 min-w-0">
         <img src="/glasshood-logo-full.png" alt="GlassHood" className="h-6 sm:h-7 flex-shrink-0" />
         {version && <span className="text-[10px] text-gray-500 dark:text-purple-300 hidden sm:inline">v{version}</span>}
-        {isDemo && <span className="text-xs bg-accent-500/20 text-accent-700 dark:bg-accent-500/20 dark:text-accent-300 px-1.5 py-0.5 rounded">DEMO</span>}
+        {isDemo && <span className="text-xs bg-accent-500/20 text-accent-700 dark:bg-accent-500/20 dark:text-accent-300 px-1.5 py-0.5 rounded">Sample data</span>}
+        {readOnly && <span className="text-xs bg-sky-500/20 text-sky-700 dark:bg-sky-500/20 dark:text-sky-300 px-1.5 py-0.5 rounded">Read-only · live system</span>}
         <div className={`w-2 h-2 rounded-full flex-shrink-0 ${STATUS_DOT[status]} animate-pulse`} title={STATUS_TEXT[status]} />
         <span className={`text-sm font-medium truncate hidden sm:inline ${STATUS_COLOR[status]}`}>
           {STATUS_TEXT[status]}

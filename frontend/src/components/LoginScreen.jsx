@@ -63,7 +63,7 @@ export default function LoginScreen({ onLogin, onDemo, prefillDemo, setPrefillDe
             className="w-full text-white rounded py-3 font-medium text-lg transition-opacity hover:opacity-90"
             style={{ background: `linear-gradient(135deg, ${GH_ORANGE}, ${CV_BLUE})` }}
           >
-            Enter Demo
+            View live (read-only)
           </button>
           <div className="mt-4">
             <button type="button" onClick={handleSwitchToLive}
@@ -142,7 +142,7 @@ export default function LoginScreen({ onLogin, onDemo, prefillDemo, setPrefillDe
         </button>
         <div className="mt-4 text-center">
           <button type="button" onClick={handleExploreDemo} className="text-gray-400 hover:text-gray-300 text-xs">
-            Explore demo
+            View live (read-only)
           </button>
         </div>
         <p className="text-gray-600 text-xs mt-3 text-center">AI Infrastructure Audit</p>

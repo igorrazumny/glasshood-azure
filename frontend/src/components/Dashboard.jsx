@@ -157,7 +157,7 @@ export default function Dashboard({ onLogout, onSwitchToLive, mode = 'live' }) {
     <div className="h-screen bg-surface dark:bg-purple-950 flex flex-col overflow-hidden">
       {isDemo && (
         <div className="bg-yellow-900/40 border-b border-yellow-700/50 px-4 py-2 flex items-center justify-between text-sm">
-          <span className="text-yellow-300">DEMO — viewing sample data</span>
+          <span className="text-yellow-300">Read-only · sample data (live system unavailable)</span>
           {onSwitchToLive && (
             <button onClick={onSwitchToLive} className="text-yellow-400 hover:text-yellow-300 text-xs">
               Switch to live system &rarr;
@@ -171,6 +171,7 @@ export default function Dashboard({ onLogout, onSwitchToLive, mode = 'live' }) {
         onRefresh={topology.refresh}
         onLogout={isDemo ? null : handleLogout}
         isDemo={isDemo}
+        readOnly={hideCosts && !isDemo}
         onVerify={isDemo ? null : runVerification}
       />
       {projectNodes.length > 0 && (

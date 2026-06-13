@@ -38,4 +38,4 @@
   - Route `/guest` or `/view` if low-cost; otherwise keep the path and fix visible text only.
 - **Deferred sub-item (backlog — Igor OK to defer):** genericize the guest-view display labels (component / model / region identifiers) so the read-only view conveys the architecture without specific internal identifiers.
 - **Owners:** neo (app — relabel, badge, live read-only routing, label genericization). cypher (portal — "Launch demo" button text → match, one line).
-- **Status:** tracked.
+- **Status:** app IMPLEMENTED (:wif4, live on glasshood.ai — buttons → "View live (read-only)", persistent "Read-only · live system" badge, all demo wording removed; live read-only already enforced via viewer RBAC). Cypher portal rename PENDING. Display-label genericization still deferred.
