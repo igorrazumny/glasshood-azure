@@ -47,7 +47,7 @@ export default function LoginScreen({ onLogin, onDemo, prefillDemo, setPrefillDe
   const handleExploreDemo = () => {
     setPrefillDemo(true)
     setError('')
-    window.history.replaceState(null, '', '/?view')
+    window.history.replaceState(null, '', '/?demo')
   }
 
   // === DEMO MODE: just "Enter Demo" button, no credentials ===
@@ -58,19 +58,22 @@ export default function LoginScreen({ onLogin, onDemo, prefillDemo, setPrefillDe
           <div className="flex flex-col items-center mb-6">
             <img src="/glasshood-logo-full.png" alt="GlassHood" className="h-20 mb-1" />
           </div>
-          <button
-            onClick={handleEnterDemo}
-            className="w-full text-white rounded py-3 font-medium text-lg transition-opacity hover:opacity-90"
-            style={{ background: `linear-gradient(135deg, ${GH_ORANGE}, ${CV_BLUE})` }}
-          >
-            Read-only access
-          </button>
-          <p className="text-gray-500 dark:text-purple-300 text-xs mt-3 leading-relaxed">
-            Live production data · No login required · Server-side enforced
-          </p>
-          <div className="mt-4">
+          <div className="relative group">
+            <button
+              onClick={handleEnterDemo}
+              className="w-full text-white rounded py-3 font-medium text-lg transition-opacity hover:opacity-90"
+              style={{ background: `linear-gradient(135deg, ${GH_ORANGE}, ${CV_BLUE})` }}
+            >
+              Live demo
+            </button>
+            {/* Hover-only hint — does not compete visually with the full-access link below */}
+            <div className="absolute left-0 right-0 bottom-full mb-2 px-3 py-2 rounded-md bg-gray-900/95 dark:bg-purple-950/95 border border-gray-700 dark:border-purple-700 text-gray-200 dark:text-purple-200 text-xs text-center opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-20 shadow-xl">
+              Live production data · No login required · Read-only (server-side enforced)
+            </div>
+          </div>
+          <div className="mt-5">
             <button type="button" onClick={handleSwitchToLive}
-              className="hover:opacity-80 text-xs" style={{ color: CV_BLUE }}>
+              className="text-sm font-medium hover:opacity-80" style={{ color: CV_BLUE }}>
               Login (full access)
             </button>
           </div>
@@ -142,9 +145,10 @@ export default function LoginScreen({ onLogin, onDemo, prefillDemo, setPrefillDe
           </svg>
           Sign in with Corporate SSO
         </button>
-        <div className="mt-4 text-center">
-          <button type="button" onClick={handleExploreDemo} className="text-gray-400 hover:text-gray-300 text-xs">
-            Read-only access
+        <div className="mt-4">
+          <button type="button" onClick={handleExploreDemo}
+            className="w-full bg-surface dark:bg-purple-900 border border-border dark:border-purple-700 text-gray-300 rounded py-2 text-sm font-medium hover:border-gray-500 transition-colors">
+            Live demo
           </button>
         </div>
       </form>

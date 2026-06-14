@@ -10,16 +10,17 @@ import { getToken, clearToken, setAuth0TokenGetter } from './utils/api'
 
 function getInitialState() {
   const params = new URLSearchParams(window.location.search)
-  // Canonical guest entry is ?view. Accept legacy ?demo + /demo + /view too,
-  // and normalize the address bar to /?view so "demo" never appears in the URL.
-  const hasView = params.has('view') || params.has('demo')
-  if (window.location.pathname.startsWith('/demo') ||
-      window.location.pathname.startsWith('/view') ||
-      params.has('demo')) {
-    window.history.replaceState(null, '', '/?view')
+  // Canonical guest entry is ?demo (a "Live demo" — a showcase instance, not
+  // public read-only exposure of every tenant). Accept legacy ?view + /demo +
+  // /view too, and normalize the address bar to /?demo.
+  const pathGuest = window.location.pathname.startsWith('/demo') ||
+                    window.location.pathname.startsWith('/view')
+  const hasGuest = params.has('demo') || params.has('view') || pathGuest
+  if (hasGuest) {
+    window.history.replaceState(null, '', '/?demo')
   }
   if (getToken()) return { mode: 'live', prefillDemo: false }
-  return { mode: 'login', prefillDemo: hasView }
+  return { mode: 'login', prefillDemo: hasGuest }
 }
 
 export default function App() {
