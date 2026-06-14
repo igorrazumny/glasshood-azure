@@ -47,7 +47,7 @@ export default function LoginScreen({ onLogin, onDemo, prefillDemo, setPrefillDe
   const handleExploreDemo = () => {
     setPrefillDemo(true)
     setError('')
-    window.history.replaceState(null, '', '/?demo')
+    window.history.replaceState(null, '', '/?view')
   }
 
   // === DEMO MODE: just "Enter Demo" button, no credentials ===
@@ -68,10 +68,9 @@ export default function LoginScreen({ onLogin, onDemo, prefillDemo, setPrefillDe
           <div className="mt-4">
             <button type="button" onClick={handleSwitchToLive}
               className="hover:opacity-80 text-xs" style={{ color: CV_BLUE }}>
-              Login to live system
+              Login (full access)
             </button>
           </div>
-          <p className="text-gray-600 text-xs mt-3">AI Infrastructure Audit</p>
         </div>
       </div>
     )
@@ -145,7 +144,6 @@ export default function LoginScreen({ onLogin, onDemo, prefillDemo, setPrefillDe
             View live (read-only)
           </button>
         </div>
-        <p className="text-gray-600 text-xs mt-3 text-center">AI Infrastructure Audit</p>
       </form>
     </div>
   )

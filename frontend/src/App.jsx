@@ -9,13 +9,17 @@ import ErrorBoundary from './components/ErrorBoundary'
 import { getToken, clearToken, setAuth0TokenGetter } from './utils/api'
 
 function getInitialState() {
-  if (window.location.pathname.startsWith('/demo')) {
-    window.history.replaceState(null, '', '/?demo')
-  }
   const params = new URLSearchParams(window.location.search)
-  const hasDemo = params.has('demo')
+  // Canonical guest entry is ?view. Accept legacy ?demo + /demo + /view too,
+  // and normalize the address bar to /?view so "demo" never appears in the URL.
+  const hasView = params.has('view') || params.has('demo')
+  if (window.location.pathname.startsWith('/demo') ||
+      window.location.pathname.startsWith('/view') ||
+      params.has('demo')) {
+    window.history.replaceState(null, '', '/?view')
+  }
   if (getToken()) return { mode: 'live', prefillDemo: false }
-  return { mode: 'login', prefillDemo: hasDemo }
+  return { mode: 'login', prefillDemo: hasView }
 }
 
 export default function App() {
