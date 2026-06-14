@@ -120,6 +120,23 @@ pre.code{background:#f4f6fa;border-left:3px solid var(--blue);border-radius:4px;
 .tier-optional{border:1px dashed var(--border);border-radius:8px;padding:16px 20px;margin:14px 0;background:rgba(0,0,0,.015)}
 .tier-label{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--sub);margin:0 0 8px}
 
+/* Implementation-detail section (demoted bindings — compact) */
+.impl-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:12px 0 16px;max-width:880px}
+@media(min-width:680px){.impl-grid{grid-template-columns:1fr 1fr}}
+.impl-item{display:flex;gap:14px;padding:12px 16px;background:rgba(0,0,0,.025);border-radius:6px;font-size:16px;line-height:1.5}
+.impl-item>strong{flex:0 0 120px;color:var(--navy)}
+
+/* Collapsible "detail" block (e.g. the identity mechanism) */
+details.detail-block{margin:14px 0;border:1px solid var(--border);border-radius:8px;background:#fff;max-width:880px}
+details.detail-block>summary{cursor:pointer;padding:14px 18px;font-size:16px;font-weight:700;color:var(--navy);list-style:none}
+details.detail-block>summary::-webkit-details-marker{display:none}
+details.detail-block>summary::before{content:"\25B8\00a0";color:var(--orange)}
+details.detail-block[open]>summary::before{content:"\25BE\00a0"}
+details.detail-block>div{padding:0 18px 18px}
+
+/* Quiet live-view note (this is an evaluator page, not a buyer CTA) */
+.live-view-note{font-size:16px;line-height:1.55;color:var(--sub);max-width:880px;margin:20px 0 0}
+
 footer{margin:46px 0 32px;padding-top:18px;border-top:1px solid var(--border);font-size:14px;color:var(--sub)}
 
 @media(max-width:768px){.container{padding:16px}.pd-logo{height:40px}}

@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- noindex until the deployment status is confirmed green. -->
   <meta name="robots" content="noindex, nofollow">
-  <title>GlassHood on Azure — Architecture</title>
-  <meta name="description" content="GlassHood runs on Microsoft Azure and reads a live system on Google Cloud, cross-cloud, read-only, with no stored keys — via Workload Identity Federation.">
+  <title>GlassHood — Monitoring Engine Architecture</title>
+  <meta name="description" content="GlassHood is a cross-cloud, agentless, read-only monitoring engine for regulated systems: deterministic-first analysis, live topology reconciled against declared design, compliance evidence derived from what it observes.">
   <link rel="icon" href="img/glasshood-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
 <div class="container">
@@ -22,130 +22,205 @@
       <img src="img/glasshood-icon.png" alt="GlassHood" class="pd-logo">
     </div>
 
-    <!-- Hero — two sentences so both clouds land in the first read -->
+    <!-- Hero — engine-first; the cloud is a detail, not the headline -->
     <p class="pd-hero">
-      <span class="accent">Runs on Microsoft Azure. Monitors a live system on Google Cloud</span>
-      &mdash; cross-cloud, read-only, with no stored keys.
+      GlassHood is a cross-cloud, agentless, read-only monitoring engine for regulated systems
+      &mdash; <span class="accent">deterministic-first analysis, live topology reconciled against
+      declared design, and compliance evidence derived from what it observes.</span>
     </p>
 
-    <!-- Relay-to-boss line — always visible, written to be quoted upward -->
-    <p class="relay-line">
-      A workload on Azure reads a live system on Google Cloud using short-lived, on-demand
-      federated tokens &mdash; no service-account keys are stored anywhere, and access is
-      read-only by construction, so even a full compromise of the container can only observe,
-      never change the monitored system.
-    </p>
-
-    <!-- Scope-clamp — surfaced up top, not buried -->
-    <p class="scope-clamp">
-      GlassHood is a Google-Cloud-native monitor <strong>hosted on</strong> Azure. Azure is where
-      it runs and how it federates identity &mdash; not a claim that it monitors Azure resources.
-    </p>
-
-    <!-- Architecture diagram -->
-    <div class="hero-diagram">
-      <img src="img/cross-cloud-architecture.png"
-           alt="Azure Container Apps (Switzerland North) runs GlassHood; its Entra managed identity is brokered through Workload Identity Federation into a short-lived token, used by a read-only Google Cloud viewer service account to read live logs, metrics, asset inventory, and storage stats. No stored keys; read-only, cross-cloud.">
-      <p class="diagram-caption">
-        Azure Container Apps (Switzerland North) hosts GlassHood; its Entra managed identity is
-        brokered through Workload Identity Federation into a short-lived, viewer-only Google Cloud
-        token that reads live logs, metrics, asset inventory, and storage stats &mdash; one-way, read-only.
-      </p>
-    </div>
-
-    <!-- Overview cards — one substantive claim each, visible without a click -->
+    <!-- Hero cards — the five key architecture decisions -->
     <div class="pd-cards">
+      <a href="#collection" class="pd-card" data-target="collection">
+        <span class="pd-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </span>
+        <div class="pd-card-body">
+          <h4 class="pd-card-title">Agentless, read-only collection</h4>
+          <p class="pd-card-summary">Collectors poll the monitored system with list/get/describe calls only &mdash; nothing is installed in it, and read-only is structural: the code makes zero create/delete/update calls, so a full compromise can still only observe.</p>
+        </div>
+        <span class="pd-card-overlay" aria-hidden="true"><span class="pd-card-overlay-text">Click to read the section &rarr;</span></span>
+      </a>
+
+      <a href="#analysis" class="pd-card" data-target="analysis">
+        <span class="pd-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 3-3 3 3 5-5"/></svg>
+        </span>
+        <div class="pd-card-body">
+          <h4 class="pd-card-title">Deterministic-first analysis &mdash; AI last</h4>
+          <p class="pd-card-summary">Four ordered layers run on every build: a deterministic rules engine, then statistical anomaly detection, then an anomaly&harr;alert correlator, and only then AI synthesis. Cheap, reproducible, auditable signals first; AI never decides alone.</p>
+        </div>
+        <span class="pd-card-overlay" aria-hidden="true"><span class="pd-card-overlay-text">Click to read the section &rarr;</span></span>
+      </a>
+
       <a href="#topology" class="pd-card" data-target="topology">
         <span class="pd-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v4M12 11 5.5 17M12 11l6.5 6"/></svg>
         </span>
         <div class="pd-card-body">
-          <h4 class="pd-card-title">Cross-cloud: Azure host, Google Cloud observed</h4>
-          <p class="pd-card-summary">One container on Azure Container Apps (Switzerland North) reads a live system &mdash; ColdVault &mdash; that stays on Google Cloud. Read-only, one way; nothing changes clouds.</p>
+          <h4 class="pd-card-title">Discovery merged with declared design</h4>
+          <p class="pd-card-summary">Live discovery is merged with declarative manifest overlays into one topology graph, re-enriched on every build &mdash; so the model holds both observed reality and declared intent, and drift between them falls out.</p>
         </div>
         <span class="pd-card-overlay" aria-hidden="true"><span class="pd-card-overlay-text">Click to read the section &rarr;</span></span>
       </a>
 
-      <a href="#identity" class="pd-card" data-target="identity">
+      <a href="#state" class="pd-card" data-target="state">
         <span class="pd-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
         </span>
         <div class="pd-card-body">
-          <h4 class="pd-card-title">Federated identity &mdash; no stored keys</h4>
-          <p class="pd-card-summary">Azure&rsquo;s managed identity is exchanged for a short-lived, viewer-only Google Cloud token through Workload Identity Federation. No service-account key exists anywhere in the image or repo.</p>
+          <h4 class="pd-card-title">Stateless core, separate opt-in retention</h4>
+          <p class="pd-card-summary">The core keeps topology, alerts, anomalies and analysis in memory with no database &mdash; a pure read/compute path with no write surface. Durable retention is a deliberately separate, default-off write path.</p>
         </div>
         <span class="pd-card-overlay" aria-hidden="true"><span class="pd-card-overlay-text">Click to read the section &rarr;</span></span>
       </a>
 
-      <a href="#today" class="pd-card" data-target="today">
+      <a href="#compliance" class="pd-card" data-target="compliance">
         <span class="pd-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><path d="M11 18H8a2 2 0 0 1-2-2V9"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg>
         </span>
         <div class="pd-card-body">
-          <h4 class="pd-card-title">What runs today &mdash; and what&rsquo;s roadmap</h4>
-          <p class="pd-card-summary">The cross-cloud read path, anomaly detection, CVE scanning and audit-ready compliance reporting run now. The analytics layer and confidential-compute attestation are labelled roadmap &mdash; kept strictly separate.</p>
+          <h4 class="pd-card-title">Compliance derived from live evidence</h4>
+          <p class="pd-card-summary">Per-subsystem ALCOA+ audit trails feed on-demand reports derived from live evidence &mdash; mapped to Annex 11 / ALCOA+ / 21 CFR Part 11, aligned to those standards for human review, never a certification.</p>
         </div>
         <span class="pd-card-overlay" aria-hidden="true"><span class="pd-card-overlay-text">Click to read the section &rarr;</span></span>
       </a>
     </div>
 
-    <!-- CTA -->
-    <div class="pd-cta-wrap">
-      <a class="button" href="https://glasshood.ai" target="_blank" rel="noopener noreferrer">View live (read-only)</a>
-    </div>
+    <!-- Quiet live-view link — this is an evaluator page, not a buyer CTA -->
+    <p class="live-view-note">
+      This engine is live. The public read-only view shows it monitoring one real system &mdash; a
+      production solution running on Google Cloud (ColdVault). The same engine could monitor a target on
+      any cloud; that is the instance wired up today, not a constraint of the design.
+      <br><a href="https://glasshood.ai" target="_blank" rel="noopener noreferrer">View live (read-only) &rarr;</a>
+    </p>
 
     <!-- Detail sections (revealed on card click) -->
     <div class="pd-hidden-until-reveal">
 
-      <section class="pd-section" id="topology">
-        <h2>Cross-cloud topology</h2>
+      <section class="pd-section" id="collection">
+        <h2>Collection &mdash; agentless, read-only, pull-based</h2>
         <p>
-          GlassHood is a single container &mdash; a FastAPI backend (uvicorn, <code>:8080</code>) that also
-          serves a Vite-built React UI from the same process, behind JWT authentication. It runs on
-          <strong>Azure Container Apps</strong> in <strong>Switzerland North</strong>.
+          GlassHood installs nothing in the system it watches. Background collectors poll on cadences and
+          read only &mdash; every call is <code>list</code> / <code>get</code> / <code>describe</code>. A search
+          across the collection code finds zero <code>create</code> / <code>delete</code> / <code>update</code> /
+          <code>patch</code> / <code>insert</code> calls, so read-only is a property of the call surface, not a
+          setting that can be toggled off. Even a full compromise of the engine cannot change the monitored system.
         </p>
-        <p>
-          The system it monitors &mdash; <strong>ColdVault</strong> &mdash; runs on Google Cloud and stays there.
-          GlassHood reaches across the cloud boundary to read ColdVault&rsquo;s live signals. Nothing moves to
-          Azure and nothing flows back: the data path is one way, Google Cloud &rarr; GlassHood, read-only.
-        </p>
-        <div class="pd-callouts">
-          <div class="pd-callout"><strong>Host</strong><span>Azure Container Apps &middot; Switzerland North &middot; one multi-stage container (Python 3.11 backend + React UI on <code>:8080</code>)</span></div>
-          <div class="pd-callout"><strong>Observes</strong><span>ColdVault on Google Cloud &mdash; read-only, across the cloud boundary</span></div>
-          <div class="pd-callout"><strong>Direction</strong><span>One way &mdash; GlassHood reads; it never writes back</span></div>
-        </div>
-        <p>Five read paths run in production, all <code>list_*</code>/<code>get</code>/<code>describe</code> only:</p>
+        <p>In this use case &mdash; monitoring a solution on Google Cloud &mdash; the collectors read:</p>
         <ul class="tight">
-          <li><strong>Cloud Asset Inventory</strong> &mdash; <code>list_assets()</code> builds a live topology graph of ColdVault&rsquo;s GCP compute (instances, instance groups, load balancers, forwarding rules, URL maps, security policies), every ~300s.</li>
-          <li><strong>Cloud Monitoring</strong> &mdash; <code>list_time_series()</code> for load-balancer latency, request count and VM CPU, every 60s.</li>
-          <li><strong>Cloud Logging</strong> &mdash; <code>list_entries()</code> for <code>gce_instance</code> error-severity entries in a 15-minute window, every 60s.</li>
-          <li><strong>Cloud Storage</strong> &mdash; <code>list_blobs()</code> reads the vault-data bucket&rsquo;s object count, size and versioning, every ~300s.</li>
-          <li><strong>ColdVault application telemetry</strong> &mdash; ColdVault&rsquo;s own <code>/api/health</code> and <code>/api/metrics</code> over HTTPS, every 30s.</li>
+          <li><strong>Asset / topology discovery</strong> &mdash; enumerates the monitored system&rsquo;s compute resources to build the topology graph (~5&nbsp;min).</li>
+          <li><strong>Monitoring metrics</strong> &mdash; load-balancer latency, request count, VM CPU (60&nbsp;s).</li>
+          <li><strong>Error logs</strong> &mdash; error-severity entries in a rolling 15-minute window (60&nbsp;s).</li>
+          <li><strong>Storage stats</strong> &mdash; object count, size and versioning of a data bucket (~5&nbsp;min).</li>
+          <li><strong>The monitored app&rsquo;s own health/metrics API</strong> &mdash; over HTTPS (30&nbsp;s).</li>
         </ul>
         <p>
-          Discovered assets are merged with declarative YAML manifest overlays and enriched in real time
-          with these metrics on every topology build. Topology, alerts and analysis are held in in-memory
-          caches &mdash; there is no persistent database for that state.
+          The specific provider APIs above are an application of the collection model to one target. The architectural
+          decision is the model itself: agentless, pull-based, and read-only by construction.
         </p>
       </section>
 
-      <section class="pd-section" id="identity">
-        <h2>Federated identity &mdash; no stored keys</h2>
+      <section class="pd-section" id="analysis">
+        <h2>Analysis &mdash; deterministic-first, AI last</h2>
         <p>
-          GlassHood holds <strong>no Google Cloud service-account keys</strong> &mdash; not on disk, not in the
-          image, not in the repo. It reaches Google Cloud entirely through <strong>Workload Identity
-          Federation</strong>, minting short-lived credentials on demand.
+          Four layers run in a deliberate order on every build &mdash; cheap, reproducible, auditable signals first,
+          AI only on top:
         </p>
-        <p>The exact chain, each request:</p>
         <ul class="tight">
-          <li>Azure Container Apps exposes the container&rsquo;s <strong>Entra managed identity</strong> via <code>IDENTITY_ENDPOINT</code> / <code>IDENTITY_HEADER</code> (the Container Apps endpoint &mdash; not the VM IMDS at <code>169.254.169.254</code>).</li>
-          <li>A small broker, <code>az-token.py</code>, fetches the Entra managed-identity token for the GCP-trusted audience and emits it in the shape <code>google-auth</code>&rsquo;s executable credential source expects.</li>
-          <li><code>google-auth</code> trades that token at Google&rsquo;s <strong>Security Token Service</strong> for a federated token, then calls <code>generateAccessToken</code> to <strong>impersonate a viewer-only service account</strong>.</li>
-          <li>The result is a <strong>short-lived</strong> Google Cloud access token, used only to read. It is refreshed automatically; nothing long-lived is written to disk.</li>
+          <li><strong>1. Deterministic rules engine</strong> &mdash; threshold rules with a 5-minute dedup window and a 1-hour alert TTL. Fully reproducible.</li>
+          <li><strong>2. Statistical anomaly detection</strong> &mdash; z-score over a rolling baseline, configurable sigma (default 3.0), warm-up minimum and a constant-baseline fallback.</li>
+          <li><strong>3. Anomaly&harr;alert correlator</strong> &mdash; ties statistical anomalies to operational alerts and emits elevated-severity data-integrity signals.</li>
+          <li><strong>4. AI synthesis</strong> &mdash; only here, and as a <strong>model-agnostic external call</strong> to an inference-as-a-service Platform API (swappable, with a streaming fallback, cached). No model weights live in the engine.</li>
         </ul>
+        <p>
+          The ordering <em>is</em> the architecture. In a regulated context, the decisions that matter are produced by
+          deterministic and statistical layers that can be replayed and explained; AI is additive, never the thing that
+          decides alone.
+        </p>
+      </section>
 
-        <p class="code-label">The federation config &mdash; <code>gcp-cred-config.json</code> (google-auth external account)</p>
-        <pre class="code">{
+      <section class="pd-section" id="topology">
+        <h2>Topology &mdash; discovery reconciled with declared design</h2>
+        <p>
+          The source of truth for topology is neither pure auto-discovery (which misses non-enumerable nodes and carries
+          no intended state) nor a pure declarative manifest (which goes stale the moment it is written). GlassHood
+          <strong>merges both</strong>: live discovery is overlaid with declarative YAML manifests into a single enriched
+          graph, re-enriched with fresh metrics on every build.
+        </p>
+        <p>
+          Because the model carries observed reality <em>and</em> declared intent at once, drift between what was designed
+          and what is actually running falls out of the model rather than being a separate feature. Every analysis layer
+          reads from this one graph.
+        </p>
+      </section>
+
+      <section class="pd-section" id="state">
+        <h2>State &mdash; stateless core, retention is a separate write path</h2>
+        <p>
+          The monitoring core holds topology, alerts, anomalies and analysis in <strong>in-memory caches with no
+          persistent database</strong>. A restart loses history by design &mdash; that keeps the observation core a pure
+          read/compute path with no write surface of its own.
+        </p>
+        <p>
+          Durable retention is a deliberately <strong>separate, default-off write path</strong> (a hot/warm analytics
+          store plus cold object storage, with GxP no-auto-delete). Splitting &ldquo;observe&rdquo; (in-memory,
+          read-only) from &ldquo;retain&rdquo; (optional, write) is a boundary decision with real blast-radius and
+          data-retention consequences &mdash; not a question of where data happens to land.
+        </p>
+      </section>
+
+      <section class="pd-section" id="compliance">
+        <h2>Compliance &mdash; an evidence model, not a checkbox</h2>
+        <p>
+          Compliance is not a pre-baked attestation. Each subsystem keeps an <strong>ALCOA+ audit trail</strong> (an
+          in-memory ring buffer), and reports are generated <strong>on demand, derived from live evidence</strong> &mdash;
+          rule alerts, CVE findings and anomalies &mdash; mapped to EU GMP Annex 11, ALCOA+ and 21 CFR Part 11.
+        </p>
+        <p>
+          The architectural stance is that compliance is a <strong>live-evidence projection</strong> over the monitoring
+          data. Reports are <strong>aligned to</strong> those standards and support human review; they are unsigned and
+          are not an independent validation or certification. A qualified person reviews and adopts every artifact.
+        </p>
+      </section>
+
+      <section class="pd-section" id="access">
+        <h2>Access &amp; integration surface</h2>
+        <ul class="tight">
+          <li><strong>Auth</strong> &mdash; JWT, provider-agnostic (Auth0 SSO + local fallback), a 15-minute idle timeout aligned to Annex 11 §10.2, and RBAC roles (admin / operator / viewer).</li>
+          <li><strong>Guest access</strong> &mdash; an unauthenticated &ldquo;View live (read-only)&rdquo; entry showing the live topology under viewer RBAC, with a persistent &ldquo;Read-only · live system&rdquo; badge.</li>
+          <li><strong>Machine-readable</strong> &mdash; a report endpoint exposing an analysis + topology summary for external AI agents, API-key or Bearer authenticated.</li>
+          <li><strong>Supply-chain posture</strong> &mdash; continuous CVE scanning of declared components by CPE against the NVD API, with ALCOA+ status tracking.</li>
+        </ul>
+      </section>
+
+      <section class="pd-section" id="implementation">
+        <h2>Implementation details</h2>
+        <p>
+          These are the concrete bindings of the architecture above &mdash; the cloud, region, identity mechanism and
+          packaging. They are swappable implementation choices, not the architecture.
+        </p>
+        <div class="impl-grid">
+          <div class="impl-item"><strong>Host</strong><span>Azure Container Apps</span></div>
+          <div class="impl-item"><strong>Region</strong><span>Switzerland North</span></div>
+          <div class="impl-item"><strong>Identity</strong><span>Workload Identity Federation &mdash; short-lived, viewer-only token, no stored keys</span></div>
+          <div class="impl-item"><strong>Packaging</strong><span>One multi-stage container (Python 3.11 FastAPI/uvicorn on <code>:8080</code> serving a Vite-built React UI from one process)</span></div>
+          <div class="impl-item"><strong>Auth provider</strong><span>Auth0 SSO + local fallback</span></div>
+        </div>
+
+        <details class="detail-block">
+          <summary>Identity mechanism &mdash; detail</summary>
+          <div>
+            <p>
+              The engine holds no Google Cloud service-account keys anywhere. At runtime the Azure Container App&rsquo;s
+              Entra managed identity is surfaced via <code>IDENTITY_ENDPOINT</code> / <code>IDENTITY_HEADER</code> (the
+              Container Apps endpoint, not the VM IMDS). A small broker fetches that token and hands it to
+              <code>google-auth</code>&rsquo;s executable credential source, which exchanges it at Google&rsquo;s STS for a
+              federated token and impersonates a <strong>viewer-only</strong> service account &mdash; a short-lived,
+              read-only access token, refreshed on demand.
+            </p>
+            <p class="code-label">The federation config (placeholders only)</p>
+            <pre class="code">{
   "type": "external_account",
   "audience": "//iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID",
   "subject_token_type": "urn:ietf:params:oauth:token-type:jwt",
@@ -154,93 +229,44 @@
       "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/SA_EMAIL:generateAccessToken",
   "credential_source": { "executable": { "command": "/app/az-token.py", "timeout_millis": 5000 } }
 }</pre>
-
-        <p class="code-label">The Azure&rarr;GCP broker &mdash; core of <code>az-token.py</code></p>
-        <pre class="code">AUDIENCE = os.environ.get("AZURE_WIF_AUDIENCE", "api://APP_REG_CLIENT_ID")
-endpoint = os.environ["IDENTITY_ENDPOINT"]   # Azure Container Apps managed-identity endpoint
-header   = os.environ["IDENTITY_HEADER"]
-url = f"{endpoint}?resource={AUDIENCE}&amp;api-version=2019-08-01"
-req = urllib.request.Request(url, headers={"X-IDENTITY-HEADER": header})
-# ...fetch the Entra MI token, then emit it for google-auth's executable source:
-print(json.dumps({
-    "version": 1, "success": True,
-    "token_type": "urn:ietf:params:oauth:token-type:jwt",
-    "id_token": data["access_token"],
-    "expiration_time": int(data["expires_on"]),
-}))</pre>
-        <p class="note">
-          Sanitized &mdash; every identifier here is a placeholder (<code>PROJECT_NUMBER</code>, <code>POOL_ID</code>,
-          <code>PROVIDER_ID</code>, <code>SA_EMAIL</code>, <code>APP_REG_CLIENT_ID</code>). This is the actual
-          federation binding, not a secret: there is no key to leak.
-        </p>
-
-        <p>Why read-only holds even if the container is fully compromised:</p>
-        <div class="can-cannot">
-          <div class="cc-col cc-can">
-            <h4>Can</h4>
-            <ul>
-              <li>Read the logs, metrics, asset inventory and bucket stats the viewer token allows &mdash; for that token&rsquo;s short window</li>
-            </ul>
+            <p class="note">
+              Sanitized &mdash; every identifier is a placeholder. This is the trust binding, not a secret: there is no
+              key to leak.
+            </p>
+            <p>Why read-only holds even under a full compromise of the container:</p>
+            <div class="can-cannot">
+              <div class="cc-col cc-can">
+                <h4>Can</h4>
+                <ul><li>Read what the viewer token allows, for that token&rsquo;s short window</li></ul>
+              </div>
+              <div class="cc-col cc-cannot">
+                <h4>Cannot</h4>
+                <ul>
+                  <li>Write to, delete or modify the monitored system</li>
+                  <li>Mint a broader or longer-lived credential</li>
+                  <li>Exfiltrate a reusable key &mdash; none exists</li>
+                </ul>
+              </div>
+            </div>
           </div>
-          <div class="cc-col cc-cannot">
-            <h4>Cannot</h4>
-            <ul>
-              <li>Write to, delete or modify the monitored system</li>
-              <li>Mint a broader or longer-lived credential</li>
-              <li>Exfiltrate a reusable key &mdash; none exists</li>
-            </ul>
-          </div>
-        </div>
-        <p>
-          Read-only is <strong>structural, not just configured</strong>: the federated principal can impersonate
-          only a viewer-only service account, and the call surface is <code>list_*</code>/<code>get</code>/<code>describe</code>
-          (a search across the collection code finds zero create / delete / update / patch / insert calls). Widening
-          scope would require a Google Cloud IAM change the container cannot make. Token lifetime is governed by
-          Azure and Google, not by GlassHood &mdash; short-lived (on the order of an hour for the impersonated GCP
-          token), auto-refreshed, with nothing long-lived persisted.
-        </p>
-        <p>
-          Requests are hardened too: the per-node logs endpoint resolves the Cloud Logging filter and project
-          <em>server-side</em> from the manifest and ignores client-supplied filter/project parameters, and build-time
-          manifest checks block link-local and private-range targets with anti-rebinding DNS checks.
-        </p>
+        </details>
       </section>
 
-      <section class="pd-section" id="today">
-        <h2>What runs today &mdash; and what&rsquo;s roadmap</h2>
-        <p>
-          Everything in the read-only cross-cloud core below runs in the live deployment. The analytics layer and
-          hardware attestation are roadmap, labelled as such and never presented as current.
-        </p>
-
-        <p><span class="badge badge-live">Live today</span></p>
+      <section class="pd-section" id="optional">
+        <h2>Optional &mdash; opt-in, off by default</h2>
         <ul class="tight">
-          <li>The cross-cloud Workload Identity Federation path &mdash; exercised on every Google Cloud call, no stored keys.</li>
-          <li>Read-only collection from Google Cloud: Asset Inventory, Monitoring, Logging and Storage, plus ColdVault&rsquo;s own health/metrics API.</li>
-          <li>Live topology assembly and real-time enrichment from those signals.</li>
-          <li>A deterministic rules engine (thresholds, de-dup, alert TTLs) evaluated on every topology build.</li>
-          <li>Statistical anomaly detection (z-score over a rolling baseline, configurable sigma) on the collected metrics, plus an anomaly&harr;alert correlator for data-integrity signals.</li>
-          <li>Continuous CVE posture &mdash; an NVD scanner matching declared components by CPE, with ALCOA+ status tracking.</li>
-          <li>AI analysis as inference-as-a-service (9robots Platform API, with a streaming fallback) &mdash; cached, not a Google Cloud call.</li>
-          <li>On-demand compliance reports <strong>aligned to</strong> EU GMP Annex 11, ALCOA+ and 21 CFR Part 11, built from live evidence. Reports are aligned to these standards and support human review &mdash; they are not an independent validation or certification.</li>
-          <li>ALCOA+ in-memory audit trails per subsystem; JWT auth (Auth0 SSO + local fallback), a 15-minute idle timeout aligned to Annex 11 §10.2, and RBAC (admin / operator / viewer).</li>
-          <li>A guest <strong>&ldquo;View live (read-only)&rdquo;</strong> entry showing the live topology under viewer RBAC, with a persistent &ldquo;Read-only &middot; live system&rdquo; badge.</li>
+          <li><strong>Retention pipeline</strong> &mdash; a hot/warm analytics store + cold object storage with GxP no-auto-delete (a separate write path, off by default).</li>
+          <li><strong>ServiceNow sync</strong> &mdash; incident/change sync and correlation, enabled per deployment.</li>
+          <li><strong>Org-wide discovery</strong> &mdash; multi-project discovery; the default deployment uses single-project.</li>
         </ul>
+      </section>
 
-        <div class="tier-optional">
-          <p class="tier-label">Optional &mdash; off by default, configuration-dependent</p>
-          <ul class="tight">
-            <li>A BigQuery hot/warm + Cloud Storage cold-tier retention pipeline with GxP no-auto-delete retention &mdash; a separate <em>write</em> path, distinct from the read-only observation core.</li>
-            <li>ServiceNow incident/change sync and correlation &mdash; implemented and wired, enabled per deployment.</li>
-            <li>Org-wide multi-project discovery &mdash; the default deployment uses single-project discovery.</li>
-          </ul>
-        </div>
-
-        <p><span class="badge badge-roadmap">Roadmap &mdash; not yet built</span></p>
+      <section class="pd-section" id="roadmap">
+        <h2>Roadmap &mdash; not yet built</h2>
         <ul class="tight">
-          <li>A &ldquo;Sign in with Microsoft&rdquo; (Entra ID) SSO button &mdash; the auth layer is already identity-provider-agnostic; the Entra connection and button are not built yet.</li>
-          <li>A fully runtime-injected image carrying zero internal identifiers (in progress; a prerequisite for the attestation track).</li>
-          <li>Azure Confidential Computing (AMD SEV-SNP / Intel TDX) plus Microsoft Azure Attestation &mdash; a hardware-rooted attestation endpoint mirroring ColdVault&rsquo;s confidential-compute attestation. Azure Container Apps has no trusted execution environment today.</li>
+          <li>A &ldquo;Sign in with Microsoft&rdquo; (Entra ID) SSO button &mdash; the auth layer is already provider-agnostic.</li>
+          <li>A fully runtime-injected image carrying zero internal identifiers.</li>
+          <li>Azure Confidential Computing (AMD SEV-SNP / Intel TDX) + Microsoft Azure Attestation &mdash; a hardware-rooted attestation endpoint.</li>
           <li>A Databricks medallion lakehouse + Power BI analytics layer.</li>
         </ul>
       </section>
@@ -248,7 +274,9 @@ print(json.dumps({
     </div>
 
     <footer>
-      GlassHood on Azure &middot; architecture.glasshood.ai
+      GlassHood &middot; architecture.glasshood.ai &mdash; compliance reports are aligned to (not certified against)
+      Annex 11 / ALCOA+ / 21 CFR Part 11; AI prepares drafts for a qualified human and never makes a GxP decision; all
+      identifiers shown are sanitized placeholders; roadmap items are labelled roadmap.
     </footer>
 
   </div>
