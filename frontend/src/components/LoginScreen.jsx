@@ -71,9 +71,9 @@ export default function LoginScreen({ onLogin, onDemo, prefillDemo, setPrefillDe
               Live production data · No login required · Read-only (server-side enforced)
             </div>
           </div>
-          <div className="mt-5">
+          <div className="mt-4">
             <button type="button" onClick={handleSwitchToLive}
-              className="text-sm font-medium hover:opacity-80" style={{ color: CV_BLUE }}>
+              className="w-full bg-surface dark:bg-purple-900 border border-border dark:border-purple-700 text-gray-300 rounded py-2 text-base font-medium hover:border-gray-500 transition-colors">
               Login (full access)
             </button>
           </div>
@@ -147,7 +147,7 @@ export default function LoginScreen({ onLogin, onDemo, prefillDemo, setPrefillDe
         </button>
         <div className="mt-4">
           <button type="button" onClick={handleExploreDemo}
-            className="w-full bg-surface dark:bg-purple-900 border border-border dark:border-purple-700 text-gray-300 rounded py-2 text-sm font-medium hover:border-gray-500 transition-colors">
+            className="w-full bg-surface dark:bg-purple-900 border border-border dark:border-purple-700 text-gray-300 rounded py-2 text-base font-medium hover:border-gray-500 transition-colors">
             Live demo
           </button>
         </div>
