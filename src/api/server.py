@@ -10,7 +10,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 
 from src.api.routes.auth import router as auth_router
 from src.api.routes.topology import router as topology_router, get_topology_data
@@ -168,6 +168,12 @@ async def version():
 # /architecture is not swallowed by the SPA fallback).
 arch_path = Path("/app/architecture")
 if arch_path.exists():
+    # Bare /architecture → redirect to /architecture/ so the no-slash URL (the form used
+    # on the CV) reaches the mount instead of falling through to the SPA catch-all.
+    @app.get("/architecture", include_in_schema=False)
+    def _architecture_redirect():
+        return RedirectResponse(url="/architecture/")
+
     app.mount("/architecture", StaticFiles(directory=str(arch_path), html=True), name="architecture")
 
 # Static file serving (production: React build in /app/static)
