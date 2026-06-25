@@ -13,7 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src/ src/
 COPY config/ config/
-COPY VERSION .
+# Auto-version: stamp the build time so the version moves on every build
+RUN date -u +%Y.%m.%d.%H%M > VERSION
 COPY --from=frontend /build/dist /app/static
 
 # Workload Identity Federation (Azure managed identity -> GCP) — no stored keys.

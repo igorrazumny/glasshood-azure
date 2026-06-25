@@ -151,20 +151,6 @@ export default function AnalysisPanel({ data, topology }) {
         </>
       )}
 
-      <div className="mt-auto text-xs pt-2 border-t border-border dark:border-purple-700">
-        <a
-          href="https://9robots.ai"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700 dark:text-purple-300 dark:hover:text-purple-100 transition-colors"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="opacity-40 group-hover:opacity-70">
-            <rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" strokeWidth="2"/>
-            <path d="M8 12h8M12 8v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-          </svg>
-          Powered by 9robots.ai
-        </a>
-      </div>
     </div>
   )
 }

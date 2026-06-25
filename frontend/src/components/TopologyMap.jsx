@@ -843,7 +843,7 @@ export default function TopologyMap({ data, error, isDemo, hideCosts, onNodeSele
 
           // Company: merge all solutions
           let coMinX = Infinity, coMinY = Infinity, coMaxX = -Infinity, coMaxY = -Infinity
-          let totalCost = 0, company = '9RobotsAI'
+          let totalCost = 0, company = ''
           for (const sol of Object.values(solutions)) {
             coMinX = Math.min(coMinX, sol.minX); coMinY = Math.min(coMinY, sol.minY)
             coMaxX = Math.max(coMaxX, sol.maxX); coMaxY = Math.max(coMaxY, sol.maxY)
@@ -893,7 +893,7 @@ export default function TopologyMap({ data, error, isDemo, hideCosts, onNodeSele
               {drawBox(
                 coMinX - pad.co, coMinY - pad.co - labelH,
                 (coMaxX - coMinX) + pad.co * 2, (coMaxY - coMinY) + pad.co * 2 + labelH,
-                'var(--canvas-boundary-label)', '8 4', 0.3, 1.5, `${company} — All Projects`, formatCost(totalCost), 12
+                'var(--canvas-boundary-label)', '8 4', 0.3, 1.5, (company ? `${company} — All Projects` : 'All Projects'), formatCost(totalCost), 12
               )}
             </g>
           )
