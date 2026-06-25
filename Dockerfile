@@ -16,6 +16,7 @@ COPY config/ config/
 # Auto-version: stamp the build time so the version moves on every build
 RUN date -u +%Y.%m.%d.%H%M > VERSION
 COPY --from=frontend /build/dist /app/static
+COPY architecture-site/public /app/architecture
 
 # Workload Identity Federation (Azure managed identity -> GCP) — no stored keys.
 # az-token.py brokers an Entra MI token; google-auth exchanges it for short-lived

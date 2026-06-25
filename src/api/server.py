@@ -163,6 +163,13 @@ async def version():
     return {"version": _read_version(), "service": "GlassHood"}
 
 
+# Architecture reference page — static-serve architecture-site at /architecture
+# (public, separate from the React SPA; registered BEFORE the catch-all below so
+# /architecture is not swallowed by the SPA fallback).
+arch_path = Path("/app/architecture")
+if arch_path.exists():
+    app.mount("/architecture", StaticFiles(directory=str(arch_path), html=True), name="architecture")
+
 # Static file serving (production: React build in /app/static)
 static_path = Path("/app/static")
 if static_path.exists():
