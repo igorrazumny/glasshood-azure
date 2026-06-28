@@ -6,7 +6,7 @@
   <!-- noindex until the deployment status is confirmed green. -->
   <meta name="robots" content="noindex, nofollow">
   <title>GlassHood — Monitoring Engine Architecture</title>
-  <meta name="description" content="GlassHood is a cross-cloud, agentless, read-only monitoring engine for regulated systems: reproducible deterministic and statistical signals, live topology reconciled against declared design, compliance evidence derived from what it observes.">
+  <meta name="description" content="GlassHood is a cross-cloud, read-only monitoring engine for regulated systems: reproducible deterministic and statistical signals, live topology reconciled against declared design, compliance evidence derived from what it observes.">
   <link rel="icon" href="/architecture/img/glasshood-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,7 +27,7 @@
 
     <!-- Hero — one clean sentence, engine-first -->
     <p class="pd-hero">
-      GlassHood is a cross-cloud, agentless, read-only monitoring engine for regulated systems
+      GlassHood is a cross-cloud, read-only monitoring engine for regulated systems
       &mdash; reproducible deterministic and statistical signals, live topology reconciled against
       declared design, and compliance evidence derived from what it observes.
     </p>
@@ -92,35 +92,13 @@
 
     <!-- Hero cards — four key architecture decisions, balanced 2x2 -->
     <div class="pd-cards">
-      <a href="#collection" class="pd-card" data-target="collection">
+      <a href="#implementation" class="pd-card" data-target="implementation">
         <span class="pd-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
         </span>
         <div class="pd-card-body">
-          <h4 class="pd-card-title">Agentless, read-only collection</h4>
-          <p class="pd-card-summary">Collectors reach the target read-only &mdash; viewer-only token, no stored keys.</p>
-        </div>
-        <span class="pd-card-overlay" aria-hidden="true"><span class="pd-card-overlay-text">Click to read the section &rarr;</span></span>
-      </a>
-
-      <a href="#analysis" class="pd-card" data-target="analysis">
-        <span class="pd-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 3-3 3 3 5-5"/></svg>
-        </span>
-        <div class="pd-card-body">
-          <h4 class="pd-card-title">Deterministic-first signals &mdash; AI explains, never originates</h4>
-          <p class="pd-card-summary">Rules, z-score anomaly and correlation produce every signal; the AI only narrates them &mdash; it never originates an alert.</p>
-        </div>
-        <span class="pd-card-overlay" aria-hidden="true"><span class="pd-card-overlay-text">Click to read the section &rarr;</span></span>
-      </a>
-
-      <a href="#topology" class="pd-card" data-target="topology">
-        <span class="pd-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v4M12 11 5.5 17M12 11l6.5 6"/></svg>
-        </span>
-        <div class="pd-card-body">
-          <h4 class="pd-card-title">One in-memory model &mdash; observed reality plus declared intent</h4>
-          <p class="pd-card-summary">Live discovery merged with the declared design into one topology graph, rebuilt every cycle &mdash; held in memory, no database by design.</p>
+          <h4 class="pd-card-title">Implementation details</h4>
+          <p class="pd-card-summary">How it is actually built &mdash; host, identity, region, packaging &mdash; then the full topology and how every part connects.</p>
         </div>
         <span class="pd-card-overlay" aria-hidden="true"><span class="pd-card-overlay-text">Click to read the section &rarr;</span></span>
       </a>
@@ -147,10 +125,82 @@
     <!-- Detail sections (revealed on card click) -->
     <div class="pd-hidden-until-reveal">
 
+      <section class="pd-section" id="implementation">
+        <h2>Implementation details</h2>
+        <p>
+          These are the concrete bindings of the architecture above &mdash; the cloud, region, identity mechanism
+          and packaging. They are swappable implementation choices, not the architecture.
+        </p>
+        <div class="impl-grid">
+          <div class="impl-item"><strong>Host</strong><span>Azure Container Apps</span></div>
+          <div class="impl-item"><strong>Region</strong><span>Switzerland North</span></div>
+          <div class="impl-item"><strong>Identity</strong><span>Workload Identity Federation &mdash; short-lived, viewer-only token, no stored keys</span></div>
+          <div class="impl-item"><strong>Packaging</strong><span>One multi-stage container (Python 3.11 FastAPI/uvicorn on <code>:8080</code> serving a Vite-built React UI from one process)</span></div>
+          <div class="impl-item"><strong>Auth provider</strong><span>Auth0 SSO + local fallback</span></div>
+        </div>
+
+        <div class="arch-diagram arch-diagram--detail">
+          <div class="arch-scroll">
+            <svg id="detail-svg" viewBox="0 0 1100 500" width="100%" style="display:block;height:auto" role="img" aria-label="Detailed GlassHood topology, vertically stacked."><defs><marker id="d3" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#0c41cd"/></marker></defs><rect x="40" y="104" width="430" height="322" rx="9" fill="#fbfbfc" stroke="#dcdfe6" stroke-width="1.2"/><rect x="520" y="104" width="205" height="322" rx="9" fill="rgba(13,125,138,0.05)" stroke="rgba(13,125,138,0.34)" stroke-width="1.7"/><rect x="775" y="104" width="305" height="322" rx="9" fill="#fbfbfc" stroke="#dcdfe6" stroke-width="1.2"/><text x="60" y="14" font-family="'Lato',sans-serif" font-size="11" font-weight="700" letter-spacing="0.09em" fill="#0c41cd">CLIENT</text><text x="48" y="98" font-family="'Lato',sans-serif" font-size="11" font-weight="700" letter-spacing="0.09em" fill="#6b7488">AZURE — CONTAINER APPS</text><text x="528" y="98" font-family="'Lato',sans-serif" font-size="11" font-weight="700" letter-spacing="0.09em" fill="#0b5a64">CROSS-CLOUD TRUST · WIF</text><text x="783" y="98" font-family="'Lato',sans-serif" font-size="11" font-weight="700" letter-spacing="0.09em" fill="#6b7488">GCP — READ-ONLY</text><rect x="60" y="20" width="180" height="50" rx="9" fill="#ffffff" stroke="#0c41cd" stroke-width="1.4"/><text x="76" y="44" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">Browser</text><text x="76" y="61" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">viewer + admin</text><rect x="60" y="122" width="180" height="48" rx="9" fill="#ffffff" stroke="#8b93a3" stroke-width="1.3"/><text x="76" y="144" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">React 18 SPA</text><text x="76" y="160" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">topology UI</text><rect x="60" y="186" width="180" height="56" rx="9" fill="#ffffff" stroke="#8b93a3" stroke-width="1.6"/><text x="76" y="209" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">FastAPI backend</text><text x="76" y="225" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">REST API</text><rect x="60" y="300" width="180" height="76" rx="9" fill="#ffffff" stroke="#8b93a3" stroke-width="1.3"/><text x="76" y="323" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">Topology-assembly</text><text x="76" y="339" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">engine</text><text x="76" y="358" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">merges discovery · overlay</text><rect x="270" y="122" width="180" height="48" rx="9" fill="#ffffff" stroke="#0d7d8a" stroke-width="1.5"/><text x="286" y="144" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">Auth + RBAC</text><text x="286" y="160" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">local JWT · viewer/op/admin</text><rect x="270" y="300" width="180" height="56" rx="9" fill="#ffffff" stroke="#8b93a3" stroke-width="1.3"/><text x="286" y="323" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">Azure Files share</text><text x="286" y="340" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">runtime manifest</text><rect x="545" y="128" width="160" height="56" rx="9" fill="#ffffff" stroke="#0d7d8a" stroke-width="1.6"/><text x="561" y="150" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">Azure Managed</text><text x="561" y="167" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">Identity</text><rect x="545" y="210" width="160" height="56" rx="9" fill="#ffffff" stroke="#0d7d8a" stroke-width="1.7"/><text x="561" y="233" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">WIF token broker</text><text x="561" y="250" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#0b5a64">Entra MI → GCP</text><rect x="545" y="292" width="160" height="72" rx="9" fill="#ffffff" stroke="#0d7d8a" stroke-width="1.7"/><text x="561" y="315" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">GCP STS exchange</text><text x="561" y="333" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">+ impersonate</text><text x="561" y="347" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">read-only SA</text><rect x="795" y="128" width="270" height="92" rx="9" fill="#ffffff" stroke="#8b93a3" stroke-width="1.3"/><text x="811" y="152" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">GCP read APIs</text><text x="811" y="170" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">Logging · Monitoring · Asset Inventory</text><text x="811" y="184" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">Compute · GCS · Secret Manager</text><rect x="811" y="194" width="98" height="17" rx="8.5" fill="rgba(13,125,138,0.10)"/><text x="821" y="206" font-family="ui-monospace,Menlo,monospace" font-size="9" font-weight="700" fill="#0b5a64">KEYLESS · WIF</text><rect x="795" y="300" width="270" height="72" rx="9" fill="#ffffff" stroke="#8b93a3" stroke-width="1.3"/><text x="811" y="324" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">ColdVault API</text><text x="811" y="342" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">coldvault.ai · health/metrics · AI chat</text><rect x="811" y="350" width="110" height="17" rx="8.5" fill="rgba(231,90,30,0.10)"/><text x="821" y="362" font-family="ui-monospace,Menlo,monospace" font-size="9" font-weight="700" fill="#9c3d10">HTTPS · API KEY</text><path d="M150,70 V122" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M150,170 V186" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M150,242 V300" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M240,200 H258 V146 H270" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M240,338 H270" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M240,224 H500 V156 H545" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M625,184 V210" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M625,266 V292" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M705,328 H795" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M240,236 H250 V452 H935 V372" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><text x="158" y="112" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">loads</text><text x="158" y="182" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">REST · JWT</text><text x="150" y="250" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">topology</text><text x="300" y="116" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">verify_token</text><text x="300" y="294" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">reads manifest</text><text x="300" y="218" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">managed identity</text><text x="632" y="202" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">MI token</text><text x="632" y="284" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0b5a64">exchange</text><text x="712" y="322" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">read-only</text><text x="420" y="446" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#9c3d10">health/metrics + AI chat (SSE) · HTTPS + API key</text></svg>
+          </div>
+          <div class="arch-legend">
+            <span><i class="ln"></i> Live request path</span>
+            <span class="sw"><i style="border:1.6px solid #0c41cd;background:#fff"></i> Client</span>
+            <span class="sw"><i style="border:1.6px solid #0d7d8a;background:rgba(13,125,138,0.10)"></i> Trust · no keys</span>
+            <span class="sw"><i style="border:1.6px solid #8b93a3;background:#fff"></i> Cloud platform</span>
+            <span><b class="bk" style="color:#0b5a64;background:rgba(13,125,138,0.10)">KEYLESS</b> WIF spine</span>
+            <span><b class="bk" style="color:#9c3d10;background:rgba(231,90,30,0.10)">API KEY</b> ColdVault</span>
+          </div>
+        </div>
+
+        <details class="detail-block">
+          <summary>Identity mechanism &mdash; detail</summary>
+          <div>
+            <p>
+              The engine holds no Google Cloud service-account keys anywhere. At runtime the Azure Container App&rsquo;s
+              Entra managed identity is surfaced via <code>IDENTITY_ENDPOINT</code> / <code>IDENTITY_HEADER</code> (the
+              Container Apps endpoint, not the VM IMDS). A small broker fetches that token and hands it to
+              <code>google-auth</code>&rsquo;s executable credential source, which exchanges it at Google&rsquo;s STS for a
+              federated token and impersonates a <strong>viewer-only</strong> service account &mdash; a short-lived,
+              read-only access token, refreshed on demand.
+            </p>
+            <p class="code-label">The federation config (placeholders only)</p>
+            <pre class="code">{
+  "type": "external_account",
+  "audience": "//iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID",
+  "subject_token_type": "urn:ietf:params:oauth:token-type:jwt",
+  "token_url": "https://sts.googleapis.com/v1/token",
+  "service_account_impersonation_url":
+      "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/SA_EMAIL:generateAccessToken",
+  "credential_source": { "executable": { "command": "/app/az-token.py", "timeout_millis": 5000 } }
+}</pre>
+            <p class="note">
+              Sanitized &mdash; every identifier is a placeholder. This is the trust binding, not a secret: there is no
+              key to leak.
+            </p>
+            <p>Why read-only toward the target holds even under a full compromise of the container:</p>
+            <div class="can-cannot">
+              <div class="cc-col cc-can">
+                <h4>Can</h4>
+                <ul><li>Read what the viewer token allows, for that token&rsquo;s short window</li></ul>
+              </div>
+              <div class="cc-col cc-cannot">
+                <h4>Cannot</h4>
+                <ul>
+                  <li>Write to, delete or modify the monitored target</li>
+                  <li>Mint a broader or longer-lived credential</li>
+                  <li>Exfiltrate a reusable key &mdash; none exists</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+
       <section class="pd-section" id="collection">
-        <h2>Collection &mdash; agentless, read-only, pull-based</h2>
+        <h2>Collection &mdash; read-only, pull-based</h2>
         <p class="note">
-          The whole flow, in order: a target system &rarr; <strong>agentless read-only collectors</strong> (this
+          The whole flow, in order: a target system &rarr; <strong>read-only collectors</strong> (this
           section) &rarr; one topology graph (live discovery merged with the declared design) &rarr; a
           deterministic + statistical tier that produces every signal &rarr; an AI layer that narrates on top
           &rarr; compliance evidence and a read-only API. The sections below walk it in that order.
@@ -165,11 +215,6 @@
           keys</strong> (detail under Implementation). Even a full compromise of the engine cannot write to
           the monitored system.
         </p>
-        <p class="note">
-          The only write path anywhere in the system is the <strong>optional, default-off ServiceNow sync</strong>
-          (under Optional), which creates/updates incident tickets in a <em>separate</em> ITSM system &mdash;
-          never the monitored target.
-        </p>
         <p>In this use case &mdash; monitoring a solution on Google Cloud &mdash; the collectors read:</p>
         <ul class="tight">
           <li><strong>Asset / topology discovery</strong> &mdash; enumerates the target&rsquo;s compute resources to build the topology graph (~5&nbsp;min).</li>
@@ -181,7 +226,7 @@
         <p>
           The cross-cloud part is the host/target separation &mdash; the engine runs on one cloud and reads a
           system on another, with no stored keys. Pointing it at a different target&rsquo;s stack means writing
-          new collectors, not just changing config. The architectural decision is the model itself: agentless,
+          new collectors, not just changing config. The architectural decision is the model itself:
           pull-based, read-only by construction.
         </p>
       </section>
@@ -246,6 +291,16 @@
         </p>
       </section>
 
+      <section class="pd-section" id="access">
+        <h2>Access &amp; integration surface</h2>
+        <ul class="tight">
+          <li><strong>Auth</strong> &mdash; JWT, provider-agnostic (Auth0 SSO + local fallback), a 15-minute idle timeout aligned to Annex 11 §10.2, and RBAC roles (admin / operator / viewer).</li>
+          <li><strong>Guest access</strong> &mdash; an unauthenticated &ldquo;View live (read-only)&rdquo; entry showing the live topology under viewer RBAC, with a persistent &ldquo;Read-only · live system&rdquo; badge.</li>
+          <li><strong>Machine-readable</strong> &mdash; a report endpoint exposing an analysis + topology summary for external AI agents, API-key or Bearer authenticated.</li>
+          <li><strong>Supply-chain posture</strong> &mdash; continuous CVE scanning of declared components by CPE against the NVD API, with ALCOA+ status tracking.</li>
+        </ul>
+      </section>
+
       <section class="pd-section" id="compliance">
         <h2>Compliance &mdash; a byproduct of observation, not a checkbox</h2>
         <p>
@@ -261,110 +316,7 @@
         </p>
       </section>
 
-      <section class="pd-section" id="access">
-        <h2>Access &amp; integration surface</h2>
-        <ul class="tight">
-          <li><strong>Auth</strong> &mdash; JWT, provider-agnostic (Auth0 SSO + local fallback), a 15-minute idle timeout aligned to Annex 11 §10.2, and RBAC roles (admin / operator / viewer).</li>
-          <li><strong>Guest access</strong> &mdash; an unauthenticated &ldquo;View live (read-only)&rdquo; entry showing the live topology under viewer RBAC, with a persistent &ldquo;Read-only · live system&rdquo; badge.</li>
-          <li><strong>Machine-readable</strong> &mdash; a report endpoint exposing an analysis + topology summary for external AI agents, API-key or Bearer authenticated.</li>
-          <li><strong>Supply-chain posture</strong> &mdash; continuous CVE scanning of declared components by CPE against the NVD API, with ALCOA+ status tracking.</li>
-        </ul>
-      </section>
-
-      <section class="pd-section" id="implementation">
-        <h2>Implementation details</h2>
-        <p>
-          These are the concrete bindings of the architecture above &mdash; the cloud, region, identity mechanism
-          and packaging. They are swappable implementation choices, not the architecture.
-        </p>
-        <div class="impl-grid">
-          <div class="impl-item"><strong>Host</strong><span>Azure Container Apps</span></div>
-          <div class="impl-item"><strong>Region</strong><span>Switzerland North</span></div>
-          <div class="impl-item"><strong>Identity</strong><span>Workload Identity Federation &mdash; short-lived, viewer-only token, no stored keys</span></div>
-          <div class="impl-item"><strong>Packaging</strong><span>One multi-stage container (Python 3.11 FastAPI/uvicorn on <code>:8080</code> serving a Vite-built React UI from one process)</span></div>
-          <div class="impl-item"><strong>Auth provider</strong><span>Auth0 SSO + local fallback</span></div>
-        </div>
-
-        <div class="arch-diagram arch-diagram--detail">
-          <div class="arch-scroll">
-            <svg id="detail-svg" viewBox="0 0 1100 500" width="100%" style="display:block;height:auto" role="img" aria-label="Detailed GlassHood topology, vertically stacked."><defs><marker id="d3" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#0c41cd"/></marker></defs><rect x="40" y="104" width="430" height="322" rx="9" fill="#fbfbfc" stroke="#dcdfe6" stroke-width="1.2"/><rect x="520" y="104" width="205" height="322" rx="9" fill="rgba(13,125,138,0.05)" stroke="rgba(13,125,138,0.34)" stroke-width="1.7"/><rect x="775" y="104" width="305" height="322" rx="9" fill="#fbfbfc" stroke="#dcdfe6" stroke-width="1.2"/><text x="60" y="28" font-family="'Lato',sans-serif" font-size="11" font-weight="700" letter-spacing="0.09em" fill="#0c41cd">CLIENT</text><text x="48" y="98" font-family="'Lato',sans-serif" font-size="11" font-weight="700" letter-spacing="0.09em" fill="#6b7488">AZURE — CONTAINER APPS</text><text x="528" y="98" font-family="'Lato',sans-serif" font-size="11" font-weight="700" letter-spacing="0.09em" fill="#0b5a64">CROSS-CLOUD TRUST · WIF</text><text x="783" y="98" font-family="'Lato',sans-serif" font-size="11" font-weight="700" letter-spacing="0.09em" fill="#6b7488">GCP — READ-ONLY</text><rect x="60" y="36" width="180" height="50" rx="9" fill="#ffffff" stroke="#0c41cd" stroke-width="1.4"/><text x="76" y="60" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">Browser</text><text x="76" y="77" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">viewer + admin</text><rect x="60" y="122" width="180" height="48" rx="9" fill="#ffffff" stroke="#8b93a3" stroke-width="1.3"/><text x="76" y="144" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">React 18 SPA</text><text x="76" y="160" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">topology UI</text><rect x="60" y="186" width="180" height="56" rx="9" fill="#ffffff" stroke="#8b93a3" stroke-width="1.6"/><text x="76" y="209" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">FastAPI backend</text><text x="76" y="225" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">REST API</text><rect x="60" y="300" width="180" height="76" rx="9" fill="#ffffff" stroke="#8b93a3" stroke-width="1.3"/><text x="76" y="323" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">Topology-assembly</text><text x="76" y="339" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">engine</text><text x="76" y="358" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">merges discovery · overlay</text><rect x="270" y="122" width="180" height="48" rx="9" fill="#ffffff" stroke="#0d7d8a" stroke-width="1.5"/><text x="286" y="144" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">Auth + RBAC</text><text x="286" y="160" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">local JWT · viewer/op/admin</text><rect x="270" y="300" width="180" height="56" rx="9" fill="#ffffff" stroke="#8b93a3" stroke-width="1.3"/><text x="286" y="323" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">Azure Files share</text><text x="286" y="340" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">runtime manifest</text><rect x="545" y="128" width="160" height="56" rx="9" fill="#ffffff" stroke="#0d7d8a" stroke-width="1.6"/><text x="561" y="150" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">Azure Managed</text><text x="561" y="167" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">Identity</text><rect x="545" y="210" width="160" height="56" rx="9" fill="#ffffff" stroke="#0d7d8a" stroke-width="1.7"/><text x="561" y="233" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">WIF token broker</text><text x="561" y="250" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#0b5a64">Entra MI → GCP</text><rect x="545" y="292" width="160" height="72" rx="9" fill="#ffffff" stroke="#0d7d8a" stroke-width="1.7"/><text x="561" y="315" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">GCP STS exchange</text><text x="561" y="333" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">+ impersonate</text><text x="561" y="347" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">read-only SA</text><rect x="795" y="128" width="270" height="92" rx="9" fill="#ffffff" stroke="#8b93a3" stroke-width="1.3"/><text x="811" y="152" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">GCP read APIs</text><text x="811" y="170" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">Logging · Monitoring · Asset Inventory</text><text x="811" y="184" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">Compute · GCS · Secret Manager</text><rect x="811" y="194" width="98" height="17" rx="8.5" fill="rgba(13,125,138,0.10)"/><text x="821" y="206" font-family="ui-monospace,Menlo,monospace" font-size="9" font-weight="700" fill="#0b5a64">KEYLESS · WIF</text><rect x="795" y="300" width="270" height="72" rx="9" fill="#ffffff" stroke="#8b93a3" stroke-width="1.3"/><text x="811" y="324" font-family="'Lato',sans-serif" font-size="13" font-weight="700" fill="#000055">ColdVault API</text><text x="811" y="342" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="400" fill="#555555">coldvault.ai · health/metrics · AI chat</text><rect x="811" y="350" width="110" height="17" rx="8.5" fill="rgba(231,90,30,0.10)"/><text x="821" y="362" font-family="ui-monospace,Menlo,monospace" font-size="9" font-weight="700" fill="#9c3d10">HTTPS · API KEY</text><path d="M150,86 V122" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M150,170 V186" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M150,242 V300" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M240,200 H258 V146 H270" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M240,338 H270" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M240,224 H500 V156 H545" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M625,184 V210" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M625,266 V292" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M705,328 H795" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><path d="M60,214 H40 V452 H935 V372" fill="none" stroke="#0c41cd" stroke-width="1.7" marker-end="url(#d3)"/><text x="158" y="112" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">loads</text><text x="158" y="182" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">REST · JWT</text><text x="150" y="250" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">topology</text><text x="300" y="116" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">verify_token</text><text x="300" y="294" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">reads manifest</text><text x="300" y="218" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">managed identity</text><text x="632" y="202" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">MI token</text><text x="632" y="284" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0b5a64">exchange</text><text x="712" y="322" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#0c41cd">read-only</text><text x="360" y="446" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="#9c3d10">health/metrics + AI chat (SSE) · HTTPS + API key</text></svg>
-          </div>
-          <div class="arch-legend">
-            <span><i class="ln"></i> Live request path</span>
-            <span class="sw"><i style="border:1.6px solid #0c41cd;background:#fff"></i> Client</span>
-            <span class="sw"><i style="border:1.6px solid #0d7d8a;background:rgba(13,125,138,0.10)"></i> Trust · no keys</span>
-            <span class="sw"><i style="border:1.6px solid #8b93a3;background:#fff"></i> Cloud platform</span>
-            <span><b class="bk" style="color:#0b5a64;background:rgba(13,125,138,0.10)">KEYLESS</b> WIF spine</span>
-            <span><b class="bk" style="color:#9c3d10;background:rgba(231,90,30,0.10)">API KEY</b> ColdVault</span>
-          </div>
-          <p class="diagram-caption">Read-only &middot; cross-cloud &mdash; the engine federates a short-lived, viewer-only identity into the monitored cloud; it observes, never modifies.</p>
-        </div>
-
-        <details class="detail-block">
-          <summary>Identity mechanism &mdash; detail</summary>
-          <div>
-            <p>
-              The engine holds no Google Cloud service-account keys anywhere. At runtime the Azure Container App&rsquo;s
-              Entra managed identity is surfaced via <code>IDENTITY_ENDPOINT</code> / <code>IDENTITY_HEADER</code> (the
-              Container Apps endpoint, not the VM IMDS). A small broker fetches that token and hands it to
-              <code>google-auth</code>&rsquo;s executable credential source, which exchanges it at Google&rsquo;s STS for a
-              federated token and impersonates a <strong>viewer-only</strong> service account &mdash; a short-lived,
-              read-only access token, refreshed on demand.
-            </p>
-            <p class="code-label">The federation config (placeholders only)</p>
-            <pre class="code">{
-  "type": "external_account",
-  "audience": "//iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID",
-  "subject_token_type": "urn:ietf:params:oauth:token-type:jwt",
-  "token_url": "https://sts.googleapis.com/v1/token",
-  "service_account_impersonation_url":
-      "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/SA_EMAIL:generateAccessToken",
-  "credential_source": { "executable": { "command": "/app/az-token.py", "timeout_millis": 5000 } }
-}</pre>
-            <p class="note">
-              Sanitized &mdash; every identifier is a placeholder. This is the trust binding, not a secret: there is no
-              key to leak.
-            </p>
-            <p>Why read-only toward the target holds even under a full compromise of the container:</p>
-            <div class="can-cannot">
-              <div class="cc-col cc-can">
-                <h4>Can</h4>
-                <ul><li>Read what the viewer token allows, for that token&rsquo;s short window</li></ul>
-              </div>
-              <div class="cc-col cc-cannot">
-                <h4>Cannot</h4>
-                <ul>
-                  <li>Write to, delete or modify the monitored target</li>
-                  <li>Mint a broader or longer-lived credential</li>
-                  <li>Exfiltrate a reusable key &mdash; none exists</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </details>
-      </section>
-
-      <section class="pd-section" id="optional">
-        <h2>Optional &mdash; opt-in, off by default</h2>
-        <ul class="tight">
-          <li><strong>Retention pipeline</strong> &mdash; a hot/warm analytics store + cold object storage with GxP no-auto-delete (a separate write path, off by default; also the durable ALCOA+ sink).</li>
-          <li><strong>ServiceNow sync</strong> &mdash; incident/change sync and correlation; writes tickets to a separate ITSM system (the only write path in the product), enabled per deployment.</li>
-          <li><strong>Org-wide discovery</strong> &mdash; multi-project discovery; the default deployment uses single-project.</li>
-        </ul>
-      </section>
-
-      <section class="pd-section" id="roadmap">
-        <h2>Roadmap &mdash; not yet built</h2>
-        <ul class="tight">
-          <li>A &ldquo;Sign in with Microsoft&rdquo; (Entra ID) SSO button &mdash; the auth layer is already provider-agnostic.</li>
-          <li>A fully runtime-injected image carrying zero internal identifiers.</li>
-          <li>Azure Confidential Computing (AMD SEV-SNP / Intel TDX) + Microsoft Azure Attestation &mdash; a hardware-rooted attestation endpoint.</li>
-          <li>A Databricks medallion lakehouse + Power BI analytics layer.</li>
-        </ul>
-      </section>
-
     </div>
-
   </div>
 </div>
 <script src="/architecture/app.js"></script>
