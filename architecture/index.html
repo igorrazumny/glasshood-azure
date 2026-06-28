@@ -1,49 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GlassHood — Architecture Reference</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- noindex until the deployment status is confirmed green. -->
+  <meta name="robots" content="noindex, nofollow">
+  <title>GlassHood — Monitoring Engine Architecture</title>
+  <meta name="description" content="GlassHood is a cross-cloud, agentless, read-only monitoring engine for regulated systems: reproducible deterministic and statistical signals, live topology reconciled against declared design, compliance evidence derived from what it observes.">
+  <link rel="icon" href="/architecture/img/glasshood-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
-<style>
-  html, body { margin:0; background:#ffffff; }
-  * { box-sizing:border-box; }
-  ::selection { background:rgba(12,65,205,0.16); }
-  .dc-planned { display:none; }
-  a.cta:hover { background:#e75a1e !important; border-color:#e75a1e !important; color:#fff !important; }
-</style>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/architecture/styles.css?v=10">
 </head>
 <body>
-  <div style="max-width:1340px;margin:0 auto 4px;padding:0 0;display:flex;gap:18px;justify-content:flex-end;align-items:center;font-family:'Lato',sans-serif;font-size:12.5px;color:#555;">
-    <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="t-planned"> Show planned / roadmap</label>
-    <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="t-evidence" checked> Show evidence refs</label>
-  </div>
-<div style="font-family:'Lato',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1a1a2e;background:#ffffff;min-height:100%;padding:56px 32px 64px;-webkit-font-smoothing:antialiased;">
+<div class="container">
+  <div class="pd-page">
 
-  <div style="max-width:1340px;margin:0 auto;">
+    <!-- Header -->
+    <div class="pd-header">
+      <a href="https://glasshood.ai" class="pd-logo-link" aria-label="GlassHood — go to the live service">
+        <img src="/architecture/img/glasshood-logo.png" alt="GlassHood" class="pd-logo">
+      </a>
+      <p class="pd-eyebrow">Architecture reference</p>
+    </div>
 
-    <header style="max-width:1080px;">
-      <p style="display:inline-flex;align-items:center;gap:11px;font-size:11px;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:#0c41cd;margin:0 0 20px;">
-        <span style="width:24px;height:2px;background:#0c41cd;opacity:0.55;display:inline-block;"></span>
-        Architecture Reference
-      </p>
-      <h1 style="font-size:34px;font-weight:700;color:#000055;letter-spacing:-0.012em;line-height:1.08;margin:0;">GlassHood</h1>
-      <p style="font-size:19px;line-height:1.6;color:#555555;max-width:720px;margin:16px 0 0;font-weight:400;">Cross-cloud AI infrastructure monitoring — an Azure application reading a live Google Cloud estate through Workload Identity Federation, with <strong style="color:#1a1a2e;font-weight:700;">no stored keys</strong>.</p>
+    <!-- Hero — one clean sentence, engine-first -->
+    <p class="pd-hero">
+      GlassHood is a cross-cloud, agentless, read-only monitoring engine for regulated systems
+      &mdash; reproducible deterministic and statistical signals, live topology reconciled against
+      declared design, and compliance evidence derived from what it observes.
+    </p>
 
-      <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:26px;">
-        <span style="display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#0c41cd;background:rgba(12,65,205,0.07);padding:6px 11px;border-radius:4px;">
-          <span style="width:6px;height:6px;border-radius:999px;background:#0c41cd;display:inline-block;"></span>
-          Live demo
-        </span>
-        <span style="font-size:13.5px;color:#555555;font-family:ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace;letter-spacing:-0.01em;">Azure Container Apps · Switzerland North</span>
-        <a href="https://glasshood.ai" target="_blank" rel="noopener" class="cta" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#0c41cd;border:1px solid #0c41cd;background:transparent;padding:9px 18px;border-radius:6px;text-decoration:none;transition:color 120ms cubic-bezier(0.4,0,0.2,1),border-color 180ms cubic-bezier(0.4,0,0.2,1),background-color 180ms cubic-bezier(0.4,0,0.2,1);margin-left:auto;white-space:nowrap;">Open live demo ↗</a>
-      </div>
-    </header>
+    <!-- One quiet scope line (honesty, no box) -->
+    <p class="scope-line">
+      A working single-instance reference implementation &mdash; in-memory, monitoring one live target,
+      deployed live &mdash; built to demonstrate the architecture, not a multi-tenant product.
+    </p>
 
-    <div style="margin-top:48px;background:#ffffff;border:1px solid #e0e2e8;border-radius:10px;padding:30px 28px 26px;">
-      <svg viewBox="0 0 1160 268" width="100%" style="display:block;height:auto;font-family:'Lato',sans-serif;overflow:visible;" role="img" aria-label="Overview: Browser to Azure application, across the Workload Identity Federation trust bridge, into the GCP read-only estate.">
+    <!-- High-level overview diagram (borderless, full card-width) -->
+    <div class="arch-diagram arch-diagram--overview" role="img" aria-label="High-level: browser to the Azure application, across the key-less Workload Identity Federation trust bridge, into the read-only Google Cloud estate.">
+      <svg viewBox="26 0 1108 268" width="100%" style="display:block;height:auto;font-family:'Lato',sans-serif;overflow:visible;" role="img" aria-label="Overview: Browser to Azure application, across the Workload Identity Federation trust bridge, into the GCP read-only estate.">
         <defs>
           <marker id="ov-ar" viewBox="0 0 10 10" markerWidth="9" markerHeight="9" refX="8.4" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#0c41cd"></path></marker>
         </defs>
@@ -92,19 +89,205 @@
       </svg>
     </div>
 
-    <section style="margin-top:64px;">
-      <div style="max-width:880px;">
-        <p style="display:inline-flex;align-items:center;gap:11px;font-size:11px;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:#555555;margin:0 0 14px;">
-          <span style="width:24px;height:2px;background:#555555;opacity:0.45;display:inline-block;"></span>
-          Full topology
-        </p>
-        <h2 style="font-size:22px;font-weight:700;color:#000055;letter-spacing:-0.01em;margin:0 0 16px;line-height:1.25;">The complete request path</h2>
-        <p style="font-size:17px;line-height:1.7;color:#555555;margin:0;">A browser loads the React SPA over managed-TLS HTTPS; the SPA calls the FastAPI backend with a Bearer JWT, gated by local Auth&nbsp;+&nbsp;RBAC. The backend's topology-assembly engine merges discovery, overlay, diff and live enrichment — drawing its shape from a runtime Azure Files manifest. Two paths then cross into Google Cloud: the GCP platform APIs are read <strong style="color:#0b5a64;font-weight:700;">keylessly</strong> through the Workload Identity Federation spine, while the ColdVault product API is reached over <strong style="color:#9c3d10;font-weight:700;">HTTPS with an API key</strong> for health, metrics and streaming AI analysis.</p>
-      </div>
 
-      <div style="margin-top:32px;background:#ffffff;border:1px solid #e0e2e8;border-radius:10px;padding:24px 24px 18px;">
-        <div style="overflow-x:auto;overflow-y:hidden;margin:0 -8px;padding:0 8px 4px;">
-        <svg id="detail-svg" viewBox="0 102 1392 412" width="100%" style="display:block;height:auto;min-width:1200px;font-family:'Lato',sans-serif;" role="img" aria-label="Full GlassHood topology: Client, Azure Container Apps, the cross-cloud Workload Identity Federation trust bridge with Managed Identity, broker and STS, and the GCP read-only estate. Two distinct paths reach GCP: keyless WIF to the platform APIs and HTTPS plus API key to ColdVault.">
+    <!-- Hero cards — four key architecture decisions, balanced 2x2 -->
+    <div class="pd-cards">
+      <a href="#collection" class="pd-card" data-target="collection">
+        <span class="pd-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </span>
+        <div class="pd-card-body">
+          <h4 class="pd-card-title">Agentless, read-only collection</h4>
+          <p class="pd-card-summary">Collectors reach the target read-only &mdash; viewer-only token, no stored keys.</p>
+        </div>
+        <span class="pd-card-overlay" aria-hidden="true"><span class="pd-card-overlay-text">Click to read the section &rarr;</span></span>
+      </a>
+
+      <a href="#analysis" class="pd-card" data-target="analysis">
+        <span class="pd-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 3-3 3 3 5-5"/></svg>
+        </span>
+        <div class="pd-card-body">
+          <h4 class="pd-card-title">Deterministic-first signals &mdash; AI explains, never originates</h4>
+          <p class="pd-card-summary">Rules, z-score anomaly and correlation produce every signal; the AI only narrates them &mdash; it never originates an alert.</p>
+        </div>
+        <span class="pd-card-overlay" aria-hidden="true"><span class="pd-card-overlay-text">Click to read the section &rarr;</span></span>
+      </a>
+
+      <a href="#topology" class="pd-card" data-target="topology">
+        <span class="pd-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v4M12 11 5.5 17M12 11l6.5 6"/></svg>
+        </span>
+        <div class="pd-card-body">
+          <h4 class="pd-card-title">One in-memory model &mdash; observed reality plus declared intent</h4>
+          <p class="pd-card-summary">Live discovery merged with the declared design into one topology graph, rebuilt every cycle &mdash; held in memory, no database by design.</p>
+        </div>
+        <span class="pd-card-overlay" aria-hidden="true"><span class="pd-card-overlay-text">Click to read the section &rarr;</span></span>
+      </a>
+
+      <a href="#compliance" class="pd-card" data-target="compliance">
+        <span class="pd-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg>
+        </span>
+        <div class="pd-card-body">
+          <h4 class="pd-card-title">Compliance as a byproduct of observation</h4>
+          <p class="pd-card-summary">Evidence is derived from what the engine observed, not self-attestation &mdash; aligned to Annex 11 / ALCOA+ / Part 11, never a certification.</p>
+        </div>
+        <span class="pd-card-overlay" aria-hidden="true"><span class="pd-card-overlay-text">Click to read the section &rarr;</span></span>
+      </a>
+    </div>
+
+    <!-- Quiet live-view link — this is an evaluator page, not a buyer CTA -->
+    <p class="live-view-note">
+      This engine is live &mdash; the read-only view shows it monitoring one real target, a production
+      solution on Google Cloud.
+      <a href="https://glasshood.ai" target="_blank" rel="noopener noreferrer">View live (read-only) &rarr;</a>
+    </p>
+
+    <!-- Detail sections (revealed on card click) -->
+    <div class="pd-hidden-until-reveal">
+
+      <section class="pd-section" id="collection">
+        <h2>Collection &mdash; agentless, read-only, pull-based</h2>
+        <p class="note">
+          The whole flow, in order: a target system &rarr; <strong>agentless read-only collectors</strong> (this
+          section) &rarr; one topology graph (live discovery merged with the declared design) &rarr; a
+          deterministic + statistical tier that produces every signal &rarr; an AI layer that narrates on top
+          &rarr; compliance evidence and a read-only API. The sections below walk it in that order.
+        </p>
+        <p>
+          GlassHood installs nothing in the system it watches. Background collectors poll on cadences and,
+          <strong>toward the monitored target</strong>, every call is <code>list</code> / <code>get</code> /
+          <code>describe</code> &mdash; a search across the collector and discovery code finds zero
+          <code>create</code> / <code>delete</code> / <code>update</code> / <code>patch</code> /
+          <code>insert</code> calls toward the target. Read-only is enforced twice: by that call surface,
+          and by the identity itself &mdash; a <strong>short-lived, viewer-only federated token with no stored
+          keys</strong> (detail under Implementation). Even a full compromise of the engine cannot write to
+          the monitored system.
+        </p>
+        <p class="note">
+          The only write path anywhere in the system is the <strong>optional, default-off ServiceNow sync</strong>
+          (under Optional), which creates/updates incident tickets in a <em>separate</em> ITSM system &mdash;
+          never the monitored target.
+        </p>
+        <p>In this use case &mdash; monitoring a solution on Google Cloud &mdash; the collectors read:</p>
+        <ul class="tight">
+          <li><strong>Asset / topology discovery</strong> &mdash; enumerates the target&rsquo;s compute resources to build the topology graph (~5&nbsp;min).</li>
+          <li><strong>Monitoring metrics</strong> &mdash; load-balancer latency, request count, VM CPU (60&nbsp;s).</li>
+          <li><strong>Error logs</strong> &mdash; error-severity entries in a rolling 15-minute window (60&nbsp;s).</li>
+          <li><strong>Storage stats</strong> &mdash; object count, size and versioning of a data bucket (~5&nbsp;min).</li>
+          <li><strong>The target app&rsquo;s own health/metrics API</strong> &mdash; over HTTPS (30&nbsp;s).</li>
+        </ul>
+        <p>
+          The cross-cloud part is the host/target separation &mdash; the engine runs on one cloud and reads a
+          system on another, with no stored keys. Pointing it at a different target&rsquo;s stack means writing
+          new collectors, not just changing config. The architectural decision is the model itself: agentless,
+          pull-based, read-only by construction.
+        </p>
+      </section>
+
+      <section class="pd-section" id="analysis">
+        <h2>Analysis &mdash; deterministic signals first, AI on top</h2>
+        <p>
+          The signals that matter are produced by a <strong>deterministic + statistical tier</strong>, then an
+          AI layer explains them. The GxP payoff: <strong>every AI conclusion is backed by a deterministic,
+          reproducible signal a human can verify without the model.</strong>
+        </p>
+        <p><strong>The deterministic / statistical tier</strong> (reproducible, runs every build):</p>
+        <ul class="tight">
+          <li><strong>Rules engine</strong> &mdash; threshold rules with a 5-minute dedup window and a 1-hour alert TTL.</li>
+          <li><strong>Statistical anomaly detection</strong> &mdash; z-score over a rolling baseline, configurable sigma (default 3.0), warm-up minimum and a constant-baseline fallback.</li>
+          <li><strong>Correlator</strong> &mdash; ties anomalies to operational alerts and raises elevated-severity data-integrity signals.</li>
+        </ul>
+        <p>
+          These run together to produce every alert and anomaly. <strong>The AI layer runs strictly on top</strong>
+          of them &mdash; a <strong>model-agnostic external call</strong> to an inference-as-a-service Platform API
+          (swappable, with a streaming fallback, cached; no model weights in the engine). It synthesizes a
+          narrative health summary and a suggested 1&ndash;10 read; that read is an <em>AI synthesis</em>, not a
+          deterministic verdict, and it never originates an alert or anomaly &mdash; the underlying signals it
+          explains are the deterministic ones above, which a human can reproduce without the model.
+        </p>
+        <p class="note">
+          Engine vs instance: the AI prompt is currently tuned to this target (it knows this system&rsquo;s
+          components). Pointing the analysis at a different target means a new prompt profile &mdash; the
+          deterministic tier is target-agnostic; the AI narrative is target-tuned.
+        </p>
+      </section>
+
+      <section class="pd-section" id="topology">
+        <h2>One in-memory model &mdash; topology reconciled with declared design</h2>
+        <p>
+          The source of truth for topology is neither pure auto-discovery (which misses non-enumerable nodes and
+          carries no intended state) nor a pure declarative manifest (which goes stale the moment it is written).
+          GlassHood <strong>merges both</strong>: live discovery is overlaid with declarative YAML manifests into a
+          single enriched graph, rebuilt with fresh metrics every cycle.
+        </p>
+        <p>
+          Because the model carries observed reality <em>and</em> declared intent in one place, the gap between
+          what was designed and what is actually running is visible in the model rather than requiring a separate
+          system, and change between cycles is tracked. Every analysis layer reads from this one graph.
+        </p>
+      </section>
+
+      <section class="pd-section" id="state">
+        <h2>State &mdash; no-database core, retention is a separate write path</h2>
+        <p>
+          That model, and the alerts, anomalies and analysis around it, live in <strong>in-memory caches with no
+          database</strong>. A restart loses history by design &mdash; that keeps the observation core a pure
+          read/compute path with no write surface of its own. The live ALCOA+ audit trails are bounded in-memory
+          ring buffers (they drop oldest and reset on restart).
+        </p>
+        <p>
+          Durable retention is a deliberately <strong>separate, default-off write path</strong> (a hot/warm
+          analytics store plus cold object storage, with GxP no-auto-delete) &mdash; and it is also where the
+          <strong>enduring</strong> ALCOA+ evidence lands when a deployment needs it kept. Splitting
+          &ldquo;observe&rdquo; (in-memory, read-only) from &ldquo;retain&rdquo; (optional, write) is a boundary
+          decision with real blast-radius and data-retention consequences.
+        </p>
+      </section>
+
+      <section class="pd-section" id="compliance">
+        <h2>Compliance &mdash; a byproduct of observation, not a checkbox</h2>
+        <p>
+          Compliance is not a pre-baked attestation. Reports are generated <strong>on demand, derived from what
+          the engine actually observed</strong> &mdash; rule alerts, CVE findings and anomalies &mdash; with a
+          per-subsystem <strong>ALCOA+ audit trail</strong>. You cannot fake what the engine observed directly;
+          the evidence is the observation.
+        </p>
+        <p>
+          Those reports are <strong>aligned to</strong> EU GMP Annex 11, ALCOA+ and 21 CFR Part 11 and support
+          human review; they are unsigned and are <strong>not</strong> an independent validation or certification.
+          A qualified person reviews and adopts every artifact.
+        </p>
+      </section>
+
+      <section class="pd-section" id="access">
+        <h2>Access &amp; integration surface</h2>
+        <ul class="tight">
+          <li><strong>Auth</strong> &mdash; JWT, provider-agnostic (Auth0 SSO + local fallback), a 15-minute idle timeout aligned to Annex 11 §10.2, and RBAC roles (admin / operator / viewer).</li>
+          <li><strong>Guest access</strong> &mdash; an unauthenticated &ldquo;View live (read-only)&rdquo; entry showing the live topology under viewer RBAC, with a persistent &ldquo;Read-only · live system&rdquo; badge.</li>
+          <li><strong>Machine-readable</strong> &mdash; a report endpoint exposing an analysis + topology summary for external AI agents, API-key or Bearer authenticated.</li>
+          <li><strong>Supply-chain posture</strong> &mdash; continuous CVE scanning of declared components by CPE against the NVD API, with ALCOA+ status tracking.</li>
+        </ul>
+      </section>
+
+      <section class="pd-section" id="implementation">
+        <h2>Implementation details</h2>
+        <p>
+          These are the concrete bindings of the architecture above &mdash; the cloud, region, identity mechanism
+          and packaging. They are swappable implementation choices, not the architecture.
+        </p>
+        <div class="impl-grid">
+          <div class="impl-item"><strong>Host</strong><span>Azure Container Apps</span></div>
+          <div class="impl-item"><strong>Region</strong><span>Switzerland North</span></div>
+          <div class="impl-item"><strong>Identity</strong><span>Workload Identity Federation &mdash; short-lived, viewer-only token, no stored keys</span></div>
+          <div class="impl-item"><strong>Packaging</strong><span>One multi-stage container (Python 3.11 FastAPI/uvicorn on <code>:8080</code> serving a Vite-built React UI from one process)</span></div>
+          <div class="impl-item"><strong>Auth provider</strong><span>Auth0 SSO + local fallback</span></div>
+        </div>
+
+        <div class="arch-diagram arch-diagram--detail">
+          <div class="arch-scroll">
+            <svg id="detail-svg" viewBox="0 102 1392 412" width="100%" style="display:block;height:auto;min-width:1200px;font-family:'Lato',sans-serif;" role="img" aria-label="Full GlassHood topology: Client, Azure Container Apps, the cross-cloud Workload Identity Federation trust bridge with Managed Identity, broker and STS, and the GCP read-only estate. Two distinct paths reach GCP: keyless WIF to the platform APIs and HTTPS plus API key to ColdVault.">
           <defs>
             <marker id="d2-blue" viewBox="0 0 10 10" markerWidth="9" markerHeight="9" refX="8.4" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#0c41cd"></path></marker>
             <marker id="d2-grey" viewBox="0 0 10 10" markerWidth="9" markerHeight="9" refX="8.4" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#9aa0ab"></path></marker>
@@ -162,7 +345,7 @@
           <g>
             <rect x="204" y="272" width="160" height="62" rx="9" fill="#ffffff" stroke="#8b93a3" stroke-width="1.6"></rect>
             <text x="219" y="297" font-size="13.5" font-weight="700" fill="#000055">FastAPI backend</text>
-            <text x="219" y="315" font-family="ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace" font-size="10" fill="#555555">REST API · server.py</text>
+            <text x="219" y="315" font-family="ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace" font-size="10" fill="#555555">REST API</text>
           </g>
           <g>
             <rect x="384" y="150" width="180" height="52" rx="9" fill="#ffffff" stroke="#8b93a3" stroke-width="1.3"></rect>
@@ -191,7 +374,7 @@
           <g>
             <rect x="758" y="270" width="144" height="66" rx="9" fill="#ffffff" stroke="#0d7d8a" stroke-width="1.7"></rect>
             <text x="773" y="296" font-size="13" font-weight="700" fill="#000055">WIF token broker</text>
-            <text x="773" y="316" font-family="ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace" font-size="10" fill="#0b5a64">az-token.py</text>
+            <text x="773" y="316" font-family="ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace" font-size="10" fill="#0b5a64">Entra MI → GCP</text>
           </g>
           <g>
             <rect x="910" y="262" width="150" height="82" rx="9" fill="#ffffff" stroke="#0d7d8a" stroke-width="1.7"></rect>
@@ -219,135 +402,92 @@
               <text x="1120" y="464" font-size="9" font-weight="700" letter-spacing="0.04em" fill="#9c3d10">HTTPS · API KEY</text>
             </g>
           </g>
-
-          <g class="dc-planned" id="dc-planned">
-            <g>
-              <rect x="188" y="528" width="1182" height="94" rx="12" fill="#fafbfc" stroke="#e0e2e8" stroke-width="1.2" stroke-dasharray="2 3"></rect>
-              <text x="190" y="520" font-size="11" font-weight="700" letter-spacing="0.1em" fill="#8a909c">CONTROL &amp; PLANNED · DASHED</text>
-
-              <g stroke="#9aa0ab" fill="none" stroke-dasharray="5 4">
-                <path d="M313,544 V506 H184 V300 H200" stroke-width="1.5" marker-end="url(#d2-grey)"></path>
-                <path d="M98,334 V512 H470 V542" stroke-width="1.5" marker-end="url(#d2-grey)"></path>
-                <path d="M320,334 V522 H740 V542" stroke-width="1.5" marker-end="url(#d2-grey)"></path>
-                <path d="M345,334 V530 H1040 V542" stroke-width="1.5" marker-end="url(#d2-grey)"></path>
-              </g>
-              <text x="206" y="498" font-family="ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace" font-size="10" fill="#8a909c">deploys image</text>
-              <text x="478" y="506" font-family="ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace" font-size="10" fill="#8a909c">OIDC (deferred)</text>
-              <text x="548" y="516" font-family="ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace" font-size="10" fill="#8a909c">sync · flag off</text>
-              <text x="820" y="524" font-family="ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace" font-size="10" fill="#8a909c">preferred · key absent</text>
-
-              <g>
-                <rect x="210" y="544" width="206" height="62" rx="9" fill="#ffffff" stroke="#aab0bd" stroke-width="1.3" stroke-dasharray="5 4"></rect>
-                <text x="225" y="570" font-size="13.5" font-weight="700" fill="#5b6473">Azure Container Registry</text>
-                <text x="225" y="588" font-family="ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace" font-size="10" fill="#8a909c">image source · deploy</text>
-              </g>
-              <g>
-                <rect x="470" y="544" width="228" height="62" rx="9" fill="#ffffff" stroke="#aab0bd" stroke-width="1.3" stroke-dasharray="5 4"></rect>
-                <text x="485" y="570" font-size="13.5" font-weight="700" fill="#5b6473">Corporate SSO</text>
-                <text x="485" y="588" font-family="ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace" font-size="10" fill="#8a909c">Auth0 / Microsoft Entra ID</text>
-              </g>
-              <g>
-                <rect x="740" y="544" width="250" height="62" rx="9" fill="#ffffff" stroke="#aab0bd" stroke-width="1.3" stroke-dasharray="5 4"></rect>
-                <text x="755" y="570" font-size="13.5" font-weight="700" fill="#5b6473">ServiceNow</text>
-                <text x="755" y="588" font-family="ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace" font-size="10" fill="#8a909c">incident / change correlation</text>
-              </g>
-              <g>
-                <rect x="1040" y="544" width="250" height="62" rx="9" fill="#ffffff" stroke="#aab0bd" stroke-width="1.3" stroke-dasharray="5 4"></rect>
-                <text x="1055" y="570" font-size="13.5" font-weight="700" fill="#5b6473">9robots Platform</text>
-                <text x="1055" y="588" font-family="ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace" font-size="10" fill="#8a909c">preferred inference</text>
-              </g>
-            </g>
-          </g>
         </svg>
+          </div>
+          <div class="arch-legend">
+            <span><i class="ln"></i> Live request path</span>
+            <span class="sw"><i style="border:1.6px solid #0c41cd;background:#fff"></i> Client</span>
+            <span class="sw"><i style="border:1.6px solid #0d7d8a;background:rgba(13,125,138,0.10)"></i> Trust · no keys</span>
+            <span class="sw"><i style="border:1.6px solid #8b93a3;background:#fff"></i> Cloud platform</span>
+            <span><b class="bk" style="color:#0b5a64;background:rgba(13,125,138,0.10)">KEYLESS</b> WIF spine</span>
+            <span><b class="bk" style="color:#9c3d10;background:rgba(231,90,30,0.10)">API KEY</b> ColdVault</span>
+          </div>
+          <p class="diagram-caption">Read-only &middot; cross-cloud &mdash; the engine federates a short-lived, viewer-only identity into the monitored cloud; it observes, never modifies.</p>
         </div>
 
-        <div style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:14px 20px;margin-top:6px;padding-top:16px;border-top:1px solid #eceef2;font-size:11.5px;color:#555555;">
-          <span style="display:inline-flex;align-items:center;gap:8px;"><svg width="26" height="8" style="overflow:visible;"><line x1="0" y1="4" x2="26" y2="4" stroke="#0c41cd" stroke-width="1.8"></line></svg>Live request path</span>
-          <span style="display:inline-flex;align-items:center;gap:8px;"><svg width="26" height="8" style="overflow:visible;"><line x1="0" y1="4" x2="26" y2="4" stroke="#9aa0ab" stroke-width="1.5" stroke-dasharray="5 4"></line></svg>Control / planned</span>
-          <span style="width:1px;height:14px;background:#e0e2e8;"></span>
-          <span style="display:inline-flex;align-items:center;gap:7px;"><span style="width:11px;height:11px;border-radius:3px;border:1.6px solid #0c41cd;background:#ffffff;"></span>Client</span>
-          <span style="display:inline-flex;align-items:center;gap:7px;"><span style="width:11px;height:11px;border-radius:3px;border:1.6px solid #0d7d8a;background:rgba(13,125,138,0.10);"></span>Trust · no keys</span>
-          <span style="display:inline-flex;align-items:center;gap:7px;"><span style="width:11px;height:11px;border-radius:3px;border:1.6px solid #8b93a3;background:#ffffff;"></span>Cloud platform</span>
-          <span style="width:1px;height:14px;background:#e0e2e8;"></span>
-          <span style="display:inline-flex;align-items:center;gap:7px;"><span style="font-family:ui-monospace,monospace;font-size:9px;font-weight:700;color:#0b5a64;background:rgba(13,125,138,0.10);padding:2px 6px;border-radius:8px;">KEYLESS</span>WIF spine</span>
-          <span style="display:inline-flex;align-items:center;gap:7px;"><span style="font-family:ui-monospace,monospace;font-size:9px;font-weight:700;color:#9c3d10;background:rgba(231,90,30,0.10);padding:2px 6px;border-radius:8px;">API KEY</span>ColdVault</span>
-        </div>
-      </div>
-    </section>
-
-    <section style="margin-top:80px;max-width:1080px;">
-      <p style="display:inline-flex;align-items:center;gap:11px;font-size:11px;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:#555555;margin:0 0 14px;">
-        <span style="width:24px;height:2px;background:#555555;opacity:0.45;display:inline-block;"></span>
-        Pillars
-      </p>
-      <h2 style="font-size:22px;font-weight:700;color:#000055;letter-spacing:-0.01em;margin:0;max-width:760px;line-height:1.25;">Four ideas hold the system together</h2>
-
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:30px;">
-
-        <div style="background:#f7f8fa;border:1px solid #e0e2e8;border-radius:10px;padding:24px 22px 22px;display:flex;flex-direction:column;transition:border-color 180ms cubic-bezier(0.4,0,0.2,1);">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-            <span style="font-family:ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace;font-size:12px;font-weight:700;color:#0c41cd;letter-spacing:0.04em;">01</span>
-            <span style="display:inline-flex;align-items:center;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#0b5a64;background:rgba(13,125,138,0.10);padding:4px 8px;border-radius:4px;">No stored keys</span>
+        <details class="detail-block">
+          <summary>Identity mechanism &mdash; detail</summary>
+          <div>
+            <p>
+              The engine holds no Google Cloud service-account keys anywhere. At runtime the Azure Container App&rsquo;s
+              Entra managed identity is surfaced via <code>IDENTITY_ENDPOINT</code> / <code>IDENTITY_HEADER</code> (the
+              Container Apps endpoint, not the VM IMDS). A small broker fetches that token and hands it to
+              <code>google-auth</code>&rsquo;s executable credential source, which exchanges it at Google&rsquo;s STS for a
+              federated token and impersonates a <strong>viewer-only</strong> service account &mdash; a short-lived,
+              read-only access token, refreshed on demand.
+            </p>
+            <p class="code-label">The federation config (placeholders only)</p>
+            <pre class="code">{
+  "type": "external_account",
+  "audience": "//iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID",
+  "subject_token_type": "urn:ietf:params:oauth:token-type:jwt",
+  "token_url": "https://sts.googleapis.com/v1/token",
+  "service_account_impersonation_url":
+      "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/SA_EMAIL:generateAccessToken",
+  "credential_source": { "executable": { "command": "/app/az-token.py", "timeout_millis": 5000 } }
+}</pre>
+            <p class="note">
+              Sanitized &mdash; every identifier is a placeholder. This is the trust binding, not a secret: there is no
+              key to leak.
+            </p>
+            <p>Why read-only toward the target holds even under a full compromise of the container:</p>
+            <div class="can-cannot">
+              <div class="cc-col cc-can">
+                <h4>Can</h4>
+                <ul><li>Read what the viewer token allows, for that token&rsquo;s short window</li></ul>
+              </div>
+              <div class="cc-col cc-cannot">
+                <h4>Cannot</h4>
+                <ul>
+                  <li>Write to, delete or modify the monitored target</li>
+                  <li>Mint a broader or longer-lived credential</li>
+                  <li>Exfiltrate a reusable key &mdash; none exists</li>
+                </ul>
+              </div>
+            </div>
           </div>
-          <h3 style="font-size:18px;font-weight:700;color:#000055;line-height:1.3;margin:0 0 10px;">Key-less cross-cloud trust</h3>
-          <p style="font-size:15px;line-height:1.6;color:#555555;margin:0;flex:1;">The container runs as an Azure Managed Identity. A broker exchanges a short-lived Entra token at Google STS to impersonate a read-only service account — no service-account keys live anywhere.</p>
-          <div class="dc-evidence">
-            <div style="margin-top:16px;padding-top:14px;border-top:1px solid #e0e2e8;font-family:ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace;font-size:11.5px;color:#8a8f9a;letter-spacing:-0.01em;">az-token.py:22 · gcp-cred-config:2</div>
-          </div>
-        </div>
+        </details>
+      </section>
 
-        <div style="background:#f7f8fa;border:1px solid #e0e2e8;border-radius:10px;padding:24px 22px 22px;display:flex;flex-direction:column;transition:border-color 180ms cubic-bezier(0.4,0,0.2,1);">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-            <span style="font-family:ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace;font-size:12px;font-weight:700;color:#0c41cd;letter-spacing:0.04em;">02</span>
-          </div>
-          <h3 style="font-size:18px;font-weight:700;color:#000055;line-height:1.3;margin:0 0 10px;">Least privilege by construction</h3>
-          <p style="font-size:15px;line-height:1.6;color:#555555;margin:0;flex:1;">Federated credentials authorize read-only access — Logging, Monitoring, Asset Inventory, Compute, GCS and Secret Manager. The estate is observed, never mutated.</p>
-          <div class="dc-evidence">
-            <div style="margin-top:16px;padding-top:14px;border-top:1px solid #e0e2e8;font-family:ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace;font-size:11.5px;color:#8a8f9a;letter-spacing:-0.01em;">collectors/gcp_logging.py:20</div>
-          </div>
-        </div>
+      <section class="pd-section" id="optional">
+        <h2>Optional &mdash; opt-in, off by default</h2>
+        <ul class="tight">
+          <li><strong>Retention pipeline</strong> &mdash; a hot/warm analytics store + cold object storage with GxP no-auto-delete (a separate write path, off by default; also the durable ALCOA+ sink).</li>
+          <li><strong>ServiceNow sync</strong> &mdash; incident/change sync and correlation; writes tickets to a separate ITSM system (the only write path in the product), enabled per deployment.</li>
+          <li><strong>Org-wide discovery</strong> &mdash; multi-project discovery; the default deployment uses single-project.</li>
+        </ul>
+      </section>
 
-        <div style="background:#f7f8fa;border:1px solid #e0e2e8;border-radius:10px;padding:24px 22px 22px;display:flex;flex-direction:column;transition:border-color 180ms cubic-bezier(0.4,0,0.2,1);">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-            <span style="font-family:ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace;font-size:12px;font-weight:700;color:#0c41cd;letter-spacing:0.04em;">03</span>
-          </div>
-          <h3 style="font-size:18px;font-weight:700;color:#000055;line-height:1.3;margin:0 0 10px;">Generic image, runtime estate</h3>
-          <p style="font-size:15px;line-height:1.6;color:#555555;margin:0;flex:1;">The container image stays sanitized and generic. The real topology is injected at runtime from an Azure Files manifest share — so one image can describe any estate.</p>
-          <div class="dc-evidence">
-            <div style="margin-top:16px;padding-top:14px;border-top:1px solid #e0e2e8;font-family:ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace;font-size:11.5px;color:#8a8f9a;letter-spacing:-0.01em;">routes/manifests.py:28</div>
-          </div>
-        </div>
+      <section class="pd-section" id="roadmap">
+        <h2>Roadmap &mdash; not yet built</h2>
+        <ul class="tight">
+          <li>A &ldquo;Sign in with Microsoft&rdquo; (Entra ID) SSO button &mdash; the auth layer is already provider-agnostic.</li>
+          <li>A fully runtime-injected image carrying zero internal identifiers.</li>
+          <li>Azure Confidential Computing (AMD SEV-SNP / Intel TDX) + Microsoft Azure Attestation &mdash; a hardware-rooted attestation endpoint.</li>
+          <li>A Databricks medallion lakehouse + Power BI analytics layer.</li>
+        </ul>
+      </section>
 
-        <div style="background:#f7f8fa;border:1px solid #e0e2e8;border-radius:10px;padding:24px 22px 22px;display:flex;flex-direction:column;transition:border-color 180ms cubic-bezier(0.4,0,0.2,1);">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-            <span style="font-family:ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace;font-size:12px;font-weight:700;color:#0c41cd;letter-spacing:0.04em;">04</span>
-          </div>
-          <h3 style="font-size:18px;font-weight:700;color:#000055;line-height:1.3;margin:0 0 10px;">Live AI analysis</h3>
-          <p style="font-size:15px;line-height:1.6;color:#555555;margin:0;flex:1;">The backend streams infrastructure-analysis prompts to the ColdVault API over SSE for health, metrics and chat — the live AI path, with the 9robots Platform wired as a preferred upgrade.</p>
-          <div class="dc-evidence">
-            <div style="margin-top:16px;padding-top:14px;border-top:1px solid #e0e2e8;font-family:ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace;font-size:11.5px;color:#8a8f9a;letter-spacing:-0.01em;">coldvault_client.py:110</div>
-          </div>
-        </div>
+    </div>
 
-      </div>
-    </section>
-
-    <footer style="margin-top:80px;padding-top:24px;border-top:1px solid #e0e2e8;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-      <span style="font-size:13px;color:#8a8f9a;">9robots · Architecture reference</span>
-      <span style="font-size:13px;color:#8a8f9a;font-family:ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace;">GlassHood · LIVE — glasshood.ai</span>
+    <footer>
+      GlassHood &middot; architecture.glasshood.ai &mdash; compliance reports are aligned to (not certified against)
+      Annex 11 / ALCOA+ / 21 CFR Part 11; AI prepares drafts for a qualified human and never makes a GxP decision; all
+      identifiers shown are sanitized placeholders; roadmap items are labelled roadmap.
     </footer>
 
   </div>
 </div>
-<script>
-(function(){
-  var p=document.getElementById('t-planned'), e=document.getElementById('t-evidence');
-  var planned=document.getElementById('dc-planned'), svg=document.getElementById('detail-svg');
-  function applyP(){ if(planned) planned.style.display = p.checked?'':'none';
-    if(svg) svg.setAttribute('viewBox', p.checked?'0 102 1392 540':'0 102 1392 412'); }
-  function applyE(){ document.querySelectorAll('.dc-evidence').forEach(function(n){ n.style.display = e.checked?'':'none'; }); }
-  p.addEventListener('change',applyP); e.addEventListener('change',applyE); applyP(); applyE();
-})();
-</script>
+<script src="/architecture/app.js"></script>
 </body>
 </html>
