@@ -142,7 +142,9 @@ footer{margin:48px 0 36px;padding-top:20px;border-top:1px solid var(--border);fo
 .arch-legend .bk{font-family:ui-monospace,monospace;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px}
 
 /* ColdVault cross-link hover — orange border + button, like the hero cards */
-.cv-link{cursor:pointer}
+.cv-link{cursor:pointer;text-decoration:none}
+.cv-link:hover{text-decoration:none}
+.cv-link text{text-decoration:none}
 .cv-link .cv-box{transition:stroke .15s ease}
 .cv-link:hover .cv-box{stroke:#e75a1e;stroke-width:2}
 .cv-link .cv-overlay{opacity:0;transition:opacity .15s ease;pointer-events:none}
