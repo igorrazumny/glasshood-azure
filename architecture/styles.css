@@ -6,7 +6,7 @@
 :root{
   --blue:#0c41cd; --navy:#000055; --orange:#e75a1e;
   --bg:#ffffff; --card:#f7f8fa; --text:#1a1a2e; --sub:#555555;
-  --muted:#f0f1f4; --border:#e0e2e8; --max:1320px;
+  --muted:#f0f1f4; --border:#e0e2e8; --max:1120px;
 }
 *{box-sizing:border-box}
 html{overflow-y:scroll}
@@ -33,14 +33,14 @@ a.button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
 .pd-logo{height:64px;width:auto;object-fit:contain;display:block}
 .pd-page-title{font-size:22px;font-weight:700;color:var(--navy);margin:14px 0 0;letter-spacing:-.01em}
 
-.pd-hero{font-size:22px;font-weight:400;line-height:1.35;color:var(--text);max-width:880px;margin:20px 0 14px;letter-spacing:-.005em}
+.pd-hero{font-size:22px;font-weight:400;line-height:1.35;color:var(--text);max-width:none;margin:20px 0 14px;letter-spacing:-.005em}
 .pd-hero .accent{color:var(--text)}
-.scope-line{font-size:19px;line-height:1.55;color:var(--sub);max-width:880px;margin:0 0 28px}
+.scope-line{font-size:19px;line-height:1.55;color:var(--sub);max-width:none;margin:0 0 28px}
 
 /* Architecture visual (in the Implementation reveal) */
 .hero-diagram{margin:18px 0 24px}
-.hero-diagram img{display:block;width:100%;height:auto;max-width:880px;margin:0 auto}
-.diagram-caption{font-size:19px;line-height:1.5;color:var(--sub);max-width:880px;margin:12px auto 0;text-align:center}
+.hero-diagram img{display:block;width:100%;height:auto;max-width:none;margin:0 auto}
+.diagram-caption{font-size:19px;line-height:1.5;color:var(--sub);max-width:none;margin:12px auto 0;text-align:center}
 
 /* Overview card grid — 2x2 (1-col mobile), exact 9robots */
 .pd-cards{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:24px}
@@ -66,7 +66,7 @@ a.button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
   padding:10px 14px;border-radius:12px;font-size:19px;font-weight:500;box-shadow:0 4px 16px rgba(0,0,0,.12);white-space:nowrap}
 
 /* Quiet live-view line */
-.live-view-note{font-size:19px;line-height:1.55;color:var(--sub);max-width:880px;margin:22px 0 0}
+.live-view-note{font-size:19px;line-height:1.55;color:var(--sub);max-width:none;margin:22px 0 0}
 
 /* Progressive disclosure */
 .pd-hidden-until-reveal{display:none}
@@ -76,24 +76,24 @@ a.button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
 .pd-section{padding:36px 0;border-top:1px solid rgba(0,0,0,.06);scroll-margin-top:24px}
 .pd-section:first-of-type{border-top:none;padding-top:16px}
 .pd-section h2{font-size:22px;font-weight:700;color:var(--blue);margin:0 0 18px;letter-spacing:-.01em}
-.pd-section p{font-size:19px;line-height:1.55;color:var(--sub);max-width:800px;margin:0 0 16px}
+.pd-section p{font-size:19px;line-height:1.55;color:var(--sub);max-width:none;margin:0 0 16px}
 
 /* Lists */
-ul.tight{margin:0 0 16px;padding-left:24px;max-width:800px}
+ul.tight{margin:0 0 16px;padding-left:24px;max-width:none}
 ul.tight li{font-size:19px;line-height:1.55;color:var(--sub);margin:8px 0}
 
 /* In-reveal note */
-.note{font-size:19px;line-height:1.55;color:var(--sub);max-width:800px;margin:8px 0 16px;padding:16px 20px;
+.note{font-size:19px;line-height:1.55;color:var(--sub);max-width:none;margin:8px 0 16px;padding:16px 20px;
   background:var(--muted);border-radius:8px}
 
 /* Code block (sanitized config) — monospace */
 .code-label{font-size:19px;font-weight:700;color:var(--navy);margin:18px 0 6px}
 pre.code{background:#f4f6fa;border-left:3px solid var(--blue);border-radius:4px;padding:18px 20px;
   font-size:16px;line-height:1.55;font-family:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
-  color:#1a1a2e;overflow-x:auto;margin:8px 0;max-width:880px;white-space:pre}
+  color:#1a1a2e;overflow-x:auto;margin:8px 0;max-width:none;white-space:pre}
 
 /* CAN / CANNOT threat model */
-.can-cannot{display:grid;grid-template-columns:1fr;gap:14px;margin:10px 0 18px;max-width:880px}
+.can-cannot{display:grid;grid-template-columns:1fr;gap:14px;margin:10px 0 18px;max-width:none}
 @media(min-width:720px){.can-cannot{grid-template-columns:1fr 1fr}}
 .cc-col{padding:20px 22px;border-radius:8px;font-size:19px;line-height:1.55}
 .cc-can{background:rgba(12,65,205,.06);border:1px solid rgba(12,65,205,.18)}
@@ -105,25 +105,25 @@ pre.code{background:#f4f6fa;border-left:3px solid var(--blue);border-radius:4px;
 .cc-col li{margin:7px 0;color:var(--text)}
 
 /* Implementation-detail bindings grid */
-.impl-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:14px 0 18px;max-width:800px}
+.impl-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:14px 0 18px;max-width:none}
 @media(min-width:680px){.impl-grid{grid-template-columns:1fr 1fr}}
 .impl-item{display:flex;gap:16px;padding:14px 18px;background:rgba(0,0,0,.025);border-radius:6px;font-size:19px;line-height:1.55}
 .impl-item>strong{flex:0 0 130px;color:var(--navy)}
 
 /* Collapsible "detail" block (identity mechanism) */
-details.detail-block{margin:16px 0;border:1px solid var(--border);border-radius:8px;background:#fff;max-width:880px}
+details.detail-block{margin:16px 0;border:1px solid var(--border);border-radius:8px;background:#fff;max-width:none}
 details.detail-block>summary{cursor:pointer;padding:16px 20px;font-size:19px;font-weight:700;color:var(--navy);list-style:none}
 details.detail-block>summary::-webkit-details-marker{display:none}
-details.detail-block>summary::before{content:"\25B8\00a0";color:var(--orange)}
+details.detail-block>summary::before{content:"\25B8\00a0";color:var(--navy)}
 details.detail-block[open]>summary::before{content:"\25BE\00a0"}
 details.detail-block>div{padding:0 20px 20px}
 
-footer{margin:48px 0 36px;padding-top:20px;border-top:1px solid var(--border);font-size:17px;line-height:1.55;color:var(--sub);max-width:880px}
+footer{margin:48px 0 36px;padding-top:20px;border-top:1px solid var(--border);font-size:17px;line-height:1.55;color:var(--sub);max-width:none}
 
 @media(max-width:768px){.container{padding:16px}.pd-logo{height:52px}}
 
 /* --- Architecture-reference eyebrow + integrated diagrams (REQ-GHA-015 merge) --- */
-.pd-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:700;
+.pd-eyebrow{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;
   letter-spacing:.11em;text-transform:uppercase;color:var(--blue);margin:14px 0 0}
 .pd-eyebrow::before{content:"";width:24px;height:2px;background:var(--blue);opacity:.55;display:inline-block}
 
