@@ -6,12 +6,12 @@
   <!-- noindex until the deployment status is confirmed green. -->
   <meta name="robots" content="noindex, nofollow">
   <title>GlassHood — Monitoring Engine Architecture</title>
-  <meta name="description" content="GlassHood is a cross-cloud, read-only monitoring engine for regulated systems: reproducible deterministic and statistical signals, live topology reconciled against declared design, compliance evidence derived from what it observes.">
+  <meta name="description" content="GlassHood is a cross-cloud monitoring engine for regulated systems — live topology reconciled against declared design, with compliance evidence derived from what it observes.">
   <link rel="icon" href="/architecture/img/glasshood-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/architecture/styles.css?v=14">
+  <link rel="stylesheet" href="/architecture/styles.css?v=15">
 </head>
 <body>
 <div class="container">
@@ -27,20 +27,13 @@
 
     <!-- Hero — one clean sentence, engine-first -->
     <p class="pd-hero">
-      GlassHood is a cross-cloud, read-only monitoring engine for regulated systems
-      &mdash; reproducible deterministic and statistical signals, live topology reconciled against
-      declared design, and compliance evidence derived from what it observes.
-    </p>
-
-    <!-- One quiet scope line (honesty, no box) -->
-    <p class="scope-line">
-      A working single-instance reference implementation &mdash; in-memory, monitoring one live target,
-      deployed live &mdash; built to demonstrate the architecture, not a multi-tenant product.
+      GlassHood is a cross-cloud monitoring engine for regulated systems. Live topology reconciled
+      against declared design, with compliance evidence derived from what it observes.
     </p>
 
     <!-- High-level overview diagram (borderless, full card-width) -->
     <div class="arch-diagram arch-diagram--overview" role="img" aria-label="High-level: browser to the Azure application, across the key-less Workload Identity Federation trust bridge, into the read-only Google Cloud estate.">
-      <svg viewBox="26 0 1108 268" width="100%" style="display:block;height:auto;font-family:'Lato',sans-serif;overflow:visible;" role="img" aria-label="Overview: Browser to Azure application, across the Workload Identity Federation trust bridge, into the GCP read-only estate.">
+      <svg viewBox="26 28 1108 240" width="100%" style="display:block;height:auto;font-family:'Lato',sans-serif;overflow:visible;" role="img" aria-label="Overview: Browser to Azure application, across the Workload Identity Federation trust bridge, into the GCP read-only estate.">
         <defs>
           <marker id="ov-ar" viewBox="0 0 10 10" markerWidth="9" markerHeight="9" refX="8.4" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#0c41cd"></path></marker>
         </defs>
@@ -150,6 +143,17 @@
             <span><b class="bk" style="color:#9c3d10;background:rgba(231,90,30,0.10)">API KEY</b> ColdVault</span>
           </div>
         </div>
+      <details class="detail-block">
+          <summary>Abbreviations</summary>
+          <div>
+            <ul class="tight">
+              <li><strong>SPA</strong> &mdash; Single-Page Application: the React front-end that loads once in the browser and updates in place, with no full page reloads.</li>
+              <li><strong>RBAC</strong> &mdash; Role-Based Access Control: the app&rsquo;s own roles (viewer / operator / admin) deciding what each signed-in user may do.</li>
+              <li><strong>WIF</strong> &mdash; Workload Identity Federation: the key-less mechanism that lets the Azure app obtain short-lived, read-only Google credentials with no stored service-account key.</li>
+              <li><strong>STS</strong> &mdash; Security Token Service: Google&rsquo;s endpoint that exchanges the federated Azure token for a short-lived Google access token.</li>
+            </ul>
+          </div>
+        </details>
       </section>
 
       <section class="pd-section" id="collection">
