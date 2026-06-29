@@ -1,8 +1,8 @@
 /* GlassHood — Architecture portal.
-   The .pd-* system is a 1:1 replication of 9robots-site/next/app/globals.css
-   (exact sizes/widths). Portal-only additions (scope-line, impl-grid, code,
-   can-cannot, detail-block, page-title) follow the same 9robots type scale:
-   body text 19px, headings 22px, logo 64px, text column max-width 800–880px. */
+   The .pd-* product-detail system (fixed sizes/widths). Portal-only additions
+   (scope-line, impl-grid, code, can-cannot, detail-block, page-title) follow the
+   same type scale: body text 19px, headings 22px, logo 64px, text column
+   max-width 800–880px. */
 :root{
   --blue:#0c41cd; --navy:#000055; --orange:#e75a1e;
   --bg:#ffffff; --card:#f7f8fa; --text:#1a1a2e; --sub:#555555;
@@ -17,7 +17,7 @@ a:hover{text-decoration:underline}
 p{margin:0 0 1em}
 .container{max-width:var(--max);margin:0 auto;padding:24px}
 
-/* Button — 9robots .button */
+/* Button */
 a.button{display:inline-block;padding:12px 20px;border-radius:12px;border:1px solid rgba(0,0,0,.12);
   background:transparent;color:var(--sub);font-weight:500;font-family:inherit;font-size:19px;cursor:pointer;
   transition:border-color .15s ease,color .15s ease,background .15s ease,box-shadow .15s ease}
@@ -26,7 +26,7 @@ a.button:hover{background:var(--orange);border-color:var(--orange);color:#fff;
 a.button:focus{outline:none}
 a.button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
 
-/* Product-detail page system (.pd-*) — exact 9robots values */
+/* Product-detail page system (.pd-*) */
 .pd-page{color:var(--text)}
 .pd-header{display:block;margin-bottom:16px}
 .pd-logo-link{display:inline-block;text-decoration:none}
@@ -42,7 +42,7 @@ a.button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
 .hero-diagram img{display:block;width:100%;height:auto;max-width:none;margin:0 auto}
 .diagram-caption{font-size:19px;line-height:1.5;color:var(--sub);max-width:none;margin:12px auto 0;text-align:center}
 
-/* Overview card grid — 2x2 (1-col mobile), exact 9robots */
+/* Overview card grid — 2x2 (1-col mobile) */
 .pd-cards{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:24px}
 @media(min-width:768px){.pd-cards{grid-template-columns:repeat(2,1fr);gap:20px}}
 .pd-card,.pd-card *{text-decoration:none!important}
@@ -73,7 +73,7 @@ a.button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
 .pd-hidden-until-reveal{display:none}
 .pd-page.revealed .pd-hidden-until-reveal{display:block;margin-top:44px}
 
-/* Detail sections — exact 9robots */
+/* Detail sections */
 .pd-section{padding:28px 0;scroll-margin-top:24px}
 .pd-section:first-of-type{padding-top:8px}
 .pd-section h2{font-size:22px;font-weight:700;color:var(--blue);margin:0 0 18px;letter-spacing:-.01em}
