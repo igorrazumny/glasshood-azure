@@ -6,8 +6,16 @@ host, or any path other than "/", this is a pure pass-through to the wrapped app
 
 Kept separate from src/api/server.py so the routing logic is unit-testable without
 importing the full app. Mirrors TestRobin REQ-589 (xrobin backend/arch_subdomain.py).
+
+The FileResponse here is forced to revalidate on every load (Cache-Control: no-cache,
+must-revalidate), mirroring NoCacheStaticFiles (src/api/static_nocache.py) — this
+bypasses that StaticFiles mount entirely, so without this header a browser caching the
+subdomain root could keep serving a stale page after a content edit. See
+static_nocache.py for the full rationale.
 """
 from starlette.responses import FileResponse
+
+_NO_CACHE_HEADERS = {"Cache-Control": "no-cache, must-revalidate"}
 
 
 def make_app(inner, index_path):
@@ -24,7 +32,7 @@ def make_app(inner, index_path):
             headers = dict(scope.get("headers") or [])
             host = headers.get(b"host", b"").decode("latin-1").split(":")[0].lower()
             if host.startswith("architecture.") and scope.get("path") == "/":
-                await FileResponse(index_path)(scope, receive, send)
+                await FileResponse(index_path, headers=_NO_CACHE_HEADERS)(scope, receive, send)
                 return
         await inner(scope, receive, send)
 

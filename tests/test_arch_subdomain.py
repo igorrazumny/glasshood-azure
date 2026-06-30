@@ -96,3 +96,23 @@ def test_missing_page_fails_loud_not_silent(tmp_path):
     app = make_app(_stub_inner(), tmp_path / "nope.html")
     with pytest.raises((RuntimeError, FileNotFoundError, OSError)):
         _run(app, ARCH_HOST, "/")
+
+
+def test_architecture_root_is_no_cache(tmp_path):
+    # This FileResponse bypasses the NoCacheStaticFiles mount (src/api/static_nocache.py)
+    # entirely, so it needs its own revalidation guarantee — otherwise a browser caching
+    # the subdomain root could keep serving a stale page after a content edit.
+    idx = tmp_path / "index.html"
+    idx.write_text("<title>ARCH PAGE</title>")
+    messages = []
+
+    async def receive():
+        return {"type": "http.request", "body": b"", "more_body": False}
+
+    async def send(message):
+        messages.append(message)
+
+    asyncio.run(make_app(_stub_inner(), idx)(_scope(ARCH_HOST, "/"), receive, send))
+    start = next(m for m in messages if m["type"] == "http.response.start")
+    cache_control = dict(start["headers"]).get(b"cache-control", b"").decode()
+    assert "no-cache" in cache_control
