@@ -12,6 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, RedirectResponse
 
+from src.api.static_nocache import NoCacheStaticFiles
 from src.api.routes.auth import router as auth_router
 from src.api.routes.topology import router as topology_router, get_topology_data
 from src.api.routes.analysis import router as analysis_router
@@ -174,7 +175,7 @@ if arch_path.exists():
     def _architecture_redirect():
         return RedirectResponse(url="/architecture/")
 
-    app.mount("/architecture", StaticFiles(directory=str(arch_path), html=True), name="architecture")
+    app.mount("/architecture", NoCacheStaticFiles(directory=str(arch_path), html=True), name="architecture")
 
 # Static file serving (production: React build in /app/static)
 static_path = Path("/app/static")
